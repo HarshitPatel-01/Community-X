@@ -13,8 +13,8 @@ server.set(express.static(path.join(__dirname,"views")));
 
 server.set("view engine", "ejs");
 
-server.get("/",(req,res)=>{
-    res.render("layouts/boilerplate.ejs");
+server.get("/home",(req,res)=>{
+    res.render("includes/view.ejs");
 });
 
 server.listen(PORT,()=>{
