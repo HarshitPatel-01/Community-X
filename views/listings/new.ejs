@@ -1,0 +1,15 @@
+<%- include('../layouts/boilerplate') %>
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <h3>Create Post</h3>
+
+        <form action="/post/new" method="POST">
+            <input type="text" name="title" placeholder="Title" class="form-control mb-3" required>
+            <textarea name="description" placeholder="Description" class="form-control mb-3"></textarea>
+            <button class="btn btn-primary w-100">Post</button>
+        </form>
+    </div>
+</div>
+
+<%- include('../layouts/footer') %>

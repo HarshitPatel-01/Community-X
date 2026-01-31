@@ -292,3 +292,127 @@ hr {
     .sidebar { display: none; }
     .main-content { margin-left: 0; }
 }
+/* Posts */
+
+.trending-card {
+  transition: 0.2s;
+}
+
+.trending-card:hover {
+  transform: translateY(-4px);
+}
+
+.post-title {
+  font-size: 18px;
+}
+
+.post-hover {
+  transition: 0.2s;
+}
+
+.post-hover:hover {
+  background: #1f2327;
+}
+
+.post-meta {
+  color: #9ca3af;
+}
+
+.post-actions {
+  display: flex;
+  gap: 18px;
+  padding-top: 12px;
+  border-top: 1px solid #2d3136;
+  margin-top: 12px;
+}
+
+.action-btn.active {
+  font-weight: bold;
+}
+/* ===== VOTE BUTTONS ===== */
+.upvote-btn,
+.downvote-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #1f2327;
+  border: 1px solid #2d3136;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Hover */
+.upvote-btn:hover,
+.downvote-btn:hover {
+  transform: translateY(-2px);
+  background: #2a2f34;
+}
+
+/* Arrow icon size */
+.upvote-btn span,
+.downvote-btn span {
+  font-weight: 600;
+}
+
+/* ACTIVE STATES */
+.upvote-btn.active {
+  color: #ff4500;
+  border-color: #ff4500;
+  background: rgba(255, 69, 0, 0.1);
+}
+
+.downvote-btn.active {
+  color: #4ea3ff;
+  border-color: #4ea3ff;
+  background: rgba(78, 163, 255, 0.1);
+}
+
+/* Press animation */
+.upvote-btn:active,
+.downvote-btn:active {
+  transform: scale(0.95);
+}
+/* ===== ACTION BUTTON BASE ===== */
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #1f2327;
+  border: 1px solid #2d3136;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+/* Hover */
+.action-btn:hover {
+  background: #2a2f34;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* Click press */
+.action-btn:active {
+  transform: scale(0.95);
+}
+.comment-btn:hover {
+  border-color: #4ea3ff;
+  color: #4ea3ff;
+}
+.share-btn:hover {
+  border-color: #20c997;
+  color: #20c997;
+}
+
+.comments-section {
+  margin-top: 25px;
+  border-top: 1px solid #2d3136;
+  padding-top: 15px;
+}

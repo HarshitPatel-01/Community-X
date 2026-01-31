@@ -1,0 +1,17 @@
+<%- include('../layouts/boilerplate') %>
+
+<div class="main-card">
+    <h2>🔥 Trending Posts</h2>
+
+    <% posts.forEach(post => { %>
+    <div class="card-outline" onclick="location.href='/post/<%= post._id %>'" style="cursor:pointer;">
+        <h5><%= post.title %></h5>
+        <p><%= post.description %></p>
+        <div class="post-actions">
+            <span>⬆ <%= post.votes %> votes</span>
+        </div>
+    </div>
+    <% }) %>
+</div>
+
+<%- include('../layouts/footer') %>
