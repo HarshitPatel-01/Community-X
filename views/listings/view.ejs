@@ -1,0 +1,76 @@
+<%- include('../layouts/boilerplate') %>
+
+<div class="main-content">
+
+    <!-- 🔥 TRENDING STRIP -->
+    <div class="trending-wrapper">
+        <div class="top-items">
+
+            <% trendingPosts.forEach(post => { %>
+            <a href="/post/<%= post._id %>" class="post-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= post.title %></h5>
+                        <p class="card-text">
+                            <%= post.description && post.description.length > 60
+                                ? post.description.substring(0, 60) + "..."
+                                : post.description || "No description" %>
+                        </p>
+                    </div>
+                </div>
+            </a>
+            <% }) %>
+
+            <!-- DUPLICATE FOR LOOP -->
+            <% trendingPosts.forEach(post => { %>
+            <a href="/post/<%= post._id %>" class="post-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= post.title %></h5>
+                        <p class="card-text">
+                            <%= post.description && post.description.length > 60
+                                ? post.description.substring(0, 60) + "..."
+                                : post.description || "No description" %>
+                        </p>
+                    </div>
+                </div>
+            </a>
+            <% }) %>
+
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- 📰 MAIN FEED -->
+    <div class="main-card">
+        <% posts.forEach(post => { %>
+        <div class="card-outline">
+
+            <div class="post-header">
+                <span class="subreddit">r/community</span>
+                <span class="post-meta">• Posted by <%= post.author.username %></span>
+            </div>
+
+            <h5 class="card-title"><%= post.title %></h5>
+            <p class="card-text"><%= post.description %></p>
+
+            <% if (post.image && post.image.url) { %>
+            <div class="post-media">
+                <img src="<%= post.image.url %>" alt="post image">
+            </div>
+            <% } %>
+
+            <div class="post-actions">
+                <a href="/post/<%= post._id %>/upvote">⬆ <%= post.votes %></a>
+                <span>💬 Comments</span>
+                <span>🔗 Share</span>
+            </div>
+
+        </div>
+        <% }) %>
+    </div>
+
+</div>
+
+<%- include('../layouts/footer') %>

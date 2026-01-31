@@ -1,0 +1,59 @@
+<%- include('../layouts/boilerplate') %>
+
+<div class="auth-wrapper">
+
+  <div class="auth-card">
+
+    <div class="text-center mb-4">
+      <h2 class="auth-logo">Community X</h2>
+      <p class="auth-subtitle">Welcome back</p>
+    </div>
+
+    <form action="/login" method="POST">
+
+      <div class="mb-3">
+        <label class="form-label">Username</label>
+        <div class="input-group">
+          <span class="input-group-text dark-icon"><i class="bi bi-person"></i></span>
+          <input type="text" class="form-control dark-input" name="username" required>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <div class="input-group">
+          <span class="input-group-text dark-icon"><i class="bi bi-lock"></i></span>
+          <input type="password" class="form-control dark-input" name="password" >
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+          <input type="checkbox" id="remember" class="form-check-input">
+          <label for="remember" class="form-check-label small">Remember me</label>
+        </div>
+        <a href="#" class="small text-decoration-none">Forgot password?</a>
+      </div>
+
+      <button class="btn btn-primary w-100 auth-btn">Login</button>
+
+    </form>
+
+    <div class="auth-divider">
+      <span>OR</span>
+    </div>
+
+    <button class="btn btn-outline-light w-100 social-btn">
+      <i class="bi bi-google me-2"></i> Continue with Google
+    </button>
+
+    <p class="auth-footer">
+      Don't have an account?
+      <a href="/signup">Sign up</a>
+    </p>
+
+  </div>
+
+</div>
+
+<%- include('../layouts/footer') %>
