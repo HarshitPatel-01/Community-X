@@ -1,0 +1,31 @@
+<div class="flash-wrapper">
+  <% if (success && success.length) { %>
+    <% success.forEach(msg => { %>
+      <div class="alert alert-success alert-dismissible fade show custom-flash" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <%= msg %>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+      </div>
+    <% }) %>
+  <% } %>
+
+  <% if (error && error.length) { %>
+    <% error.forEach(msg => { %>
+      <div class="alert alert-danger alert-dismissible fade show custom-flash" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <%= msg %>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+      </div>
+    <% }) %>
+  <% } %>
+</div>
+
+<script>
+  // Auto-hide flashes after 3 seconds
+  setTimeout(() => {
+    document.querySelectorAll('.custom-flash').forEach(el => {
+      el.classList.remove('show');
+      el.classList.add('fade');
+    });
+  }, 3000);
+</script>
