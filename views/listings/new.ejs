@@ -1,0 +1,26 @@
+<%- include('../layouts/boilerplate') %>
+
+<div class="create-post-container">
+  <div class="create-post-card">
+
+    <h2>📝 Make a Post</h2>
+
+    <form action="/post/new" method="POST" enctype="multipart/form-data" class="create-post-form">
+
+      <label>Title</label>
+      <input type="text" name="title" placeholder="Enter a catchy title..." required>
+
+      <label>Description</label>
+      <textarea name="description" placeholder="Write something interesting..."></textarea>
+
+      <label>Image (optional)</label>
+      <input type="file" name="image">
+
+      <button type="submit">🚀 Post</button>
+
+    </form>
+
+  </div>
+</div>
+
+<%- include('../layouts/footer') %>

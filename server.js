@@ -45,6 +45,8 @@ server.set("view engine", "ejs");
 /* Routes */
 server.use("/", authRoutes);
 server.use("/", postRoutes);
+server.use("/", require("./routes/commentRoutes"));
+
 
 /* Server */
 server.listen(process.env.PORT, () => {
