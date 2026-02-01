@@ -5,66 +5,63 @@ exports.getHome = async (req, res) => {
   try {
     const posts = await Post.find({})
       .populate("author")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .limit(20);
 
-    const trendingPosts = await Post.find({})
-      .populate("author")
-      .sort({ votes: -1 })
-      .limit(4);
+    const trendingPosts = await Post.aggregate([
+      { $addFields: { score: { $subtract: ["$upvotes", "$downvotes"] } } },
+      { $sort: { score: -1, createdAt: -1 } },
+      { $limit: 4 }
+    ]);
 
     res.render("listings/view", { posts, trendingPosts });
 
   } catch (err) {
     console.log(err);
-    res.send("Error loading home");
+    res.status(500).send("Error loading home");
   }
 };
+
 
 /* ================= TRENDING PAGE ================= */
 exports.getTrending = async (req, res) => {
   try {
-    const posts = await Post.find({})
-      .populate("author")
-      .sort({ votes: -1, createdAt: -1 });
+    const posts = await Post.aggregate([
+      { $addFields: { score: { $subtract: ["$upvotes", "$downvotes"] } } },
+      { $sort: { score: -1, createdAt: -1 } }
+    ]);
 
     res.render("listings/trending", { posts });
 
   } catch (err) {
     console.log(err);
-    res.send("Error loading trending posts");
+    res.status(500).send("Error loading trending posts");
   }
 };
+
 
 /* ================= SINGLE POST ================= */
 exports.getPost = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id).populate("author");
-
-    if (!post) {
-      return res.send("Post not found");
-    }
-
+    if (!post) return res.status(404).send("Post not found");
     res.render("listings/post", { post });
-
   } catch (err) {
     console.log(err);
-    res.send("Post not found");
+    res.status(500).send("Post not found");
   }
 };
 
-/* ================= CREATE POST PAGE ================= */
-exports.getCreatePost = (req, res) => {
-  res.render("listings/new");
-};
 
-/* ================= CREATE POST LOGIC ================= */
+/* ================= CREATE POST ================= */
 exports.createPost = async (req, res) => {
   try {
-    const { title, description } = req.body;
+    if (!req.session.userId)
+      return res.status(401).send("Login required");
 
     const newPost = new Post({
-      title,
-      description,
+      title: req.body.title,
+      description: req.body.description,
       author: req.session.userId
     });
 
@@ -73,79 +70,142 @@ exports.createPost = async (req, res) => {
 
   } catch (err) {
     console.log(err);
-    res.send("Error creating post");
+    res.status(500).send("Error creating post");
   }
 };
 
-/* ================= VOTE ================= */
-exports.upvoteAjax = async (req, res) => {
-  const userId = req.session.userId;
-  const post = await Post.findById(req.params.id);
 
-  const existingVote = post.votesBy.find(v => v.user.equals(userId));
-
-  if (!existingVote) {
-    post.upvotes++;
-    post.votesBy.push({ user: userId, type: "up" });
-
-  } else if (existingVote.type === "down") {
-    post.downvotes--;
-    post.upvotes++;
-    existingVote.type = "up";
-  }
-
-  await post.save();
-
-  // 🔥 RETURN EXACT FIELDS JS NEEDS
-  res.json({
-    upvotes: post.upvotes,
-    downvotes: post.downvotes
-  });
-};
+/* ================= UPVOTE ================= */
 exports.downvoteAjax = async (req, res) => {
-  const userId = req.session.userId;
-  const post = await Post.findById(req.params.id);
+  try {
+    const userId = req.session.userId;
+    if (!userId) return res.status(401).json({ error: "Login required" });
 
-  const existingVote = post.votesBy.find(v => v.user.equals(userId));
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ error: "Post not found" });
 
-  if (!existingVote) {
-    post.downvotes++;
-    post.votesBy.push({ user: userId, type: "down" });
+    post.votesBy = Array.isArray(post.votesBy) ? post.votesBy : [];
 
-  } else if (existingVote.type === "up") {
-    post.upvotes--;
-    post.downvotes++;
-    existingVote.type = "down";
+    const vote = post.votesBy.find(v => String(v.user) === String(userId));
+
+    if (!vote) {
+      post.downvotes++;
+      post.votesBy.push({ user: userId, type: "down" });
+
+    } else if (vote.type === "down") {
+      post.downvotes--;
+      post.votesBy = post.votesBy.filter(v => String(v.user) !== String(userId));
+
+    } else {
+      post.upvotes--;
+      post.downvotes++;
+      vote.type = "down";
+    }
+
+    await post.save();
+    res.json({ upvotes: post.upvotes, downvotes: post.downvotes });
+
+  } catch (err) {
+    console.error("DOWNVOTE ERROR:", err);
+    res.status(500).json({ error: "Voting failed" });
   }
-
-  await post.save();
-
-  res.json({
-    upvotes: post.upvotes,
-    downvotes: post.downvotes
-  });
 };
 
+
+/* ================= DOWNVOTE ================= */
+exports.upvoteAjax = async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    if (!userId) return res.status(401).json({ error: "Login required" });
+
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ error: "Post not found" });
+
+    post.votesBy = Array.isArray(post.votesBy) ? post.votesBy : [];
+
+    const vote = post.votesBy.find(v => String(v.user) === String(userId));
+
+    if (!vote) {
+      post.upvotes++;
+      post.votesBy.push({ user: userId, type: "up" });
+
+    } else if (vote.type === "up") {
+      post.upvotes--;
+      post.votesBy = post.votesBy.filter(v => String(v.user) !== String(userId));
+
+    } else {
+      post.downvotes--;
+      post.upvotes++;
+      vote.type = "up";
+    }
+
+    await post.save();
+    res.json({ upvotes: post.upvotes, downvotes: post.downvotes });
+
+  } catch (err) {
+    console.error("UPVOTE ERROR:", err);
+    res.status(500).json({ error: "Voting failed" });
+  }
+};
 
 /* ================= DELETE POST ================= */
 exports.deletePost = async (req, res) => {
   try {
+    if (!req.session.userId)
+      return res.status(401).send("Login required");
+
     const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).send("Post not found");
 
-    if (!post) {
-      return res.send("Post not found");
-    }
-
-    // Only post owner can delete
-    if (!post.author.equals(req.session.userId)) {
-      return res.send("Unauthorized action");
-    }
+    if (!post.author.equals(req.session.userId))
+      return res.status(403).send("Unauthorized action");
 
     await post.deleteOne();
     res.redirect("/home");
 
   } catch (err) {
     console.log(err);
-    res.send("Error deleting post");
+    res.status(500).send("Error deleting post");
+  }
+};
+
+/*==Update*/
+exports.getPost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id)
+      .populate("author")
+      .populate({
+        path: "comments",
+        populate: { path: "author" }
+      });
+
+    if (!post) return res.status(404).send("Post not found");
+
+    res.render("listings/post", { post });
+
+  } catch (err) {
+    res.status(500).send("Post not found");
+  }
+};
+
+const Comment = require("../models/comment");
+
+exports.getPost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id).populate("author");
+
+    const comments = await Comment.find({ post: post._id })
+      .populate("author")
+      .sort({ createdAt: -1 });
+
+    res.render("listings/post", {
+      post,
+      comments,
+      currentUser: req.session.userId
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Post not found");
   }
 };

@@ -24,33 +24,61 @@
 <nav class="navbar navbar-expand-lg shadow-sm fixed-top">
     <div class="container-fluid position-relative">
 
+        <!-- Logo -->
         <a class="navbar-brand fw-bold fs-4" href="/home">Community X</a>
 
-        <form class="search-form">
+        <!-- Search -->
+        <form class="search-form mx-auto">
             <input class="form-control" type="search" placeholder="Search communities...">
         </form>
 
+        <!-- Right Side -->
         <div class="d-flex align-items-center gap-3">
 
             <% if (currentUser) { %>
-                <span class="nav-link text-light">Hello, <strong><%= currentUser.username %></strong></span>
+
+                <!-- 🔥 CREATE POST BUTTON -->
+                <a href="/post/new" class="create-post-btn">
+                    <i class="bi bi-plus-circle"></i> Post
+                </a>
+
+                <span class="nav-link text-light">
+                    Hello, <strong><%= currentUser.username %></strong>
+                </span>
+
                 <a class="nav-link" href="/logout">Logout</a>
+
             <% } else { %>
+
                 <a class="nav-link" href="/login">Log in</a>
                 <a class="nav-link" href="/signup">Sign up</a>
+
             <% } %>
+
         </div>
-
-
     </div>
 </nav>
+
+<!-- FLASH MESSAGES -->
 <%- include('../includes/flash') %>
 
 <!-- ===== SIDEBAR ===== -->
 <div id="sidebar" class="sidebar">
     <ul class="nav flex-column">
-        <li class="nav-item"><a class="nav-link" href="/home"><i class="bi bi-house"></i> Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-arrow-up-right-circle"></i> Popular</a></li>
-        <li class="nav-item"><a class="nav-link" href="#"><i class="bi bi-compass"></i> Explore</a></li>
+        <li class="nav-item">
+            <a class="nav-link" href="/home">
+                <i class="bi bi-house"></i> Home
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">
+                <i class="bi bi-arrow-up-right-circle"></i> Popular
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">
+                <i class="bi bi-compass"></i> Explore
+            </a>
+        </li>
     </ul>
 </div>

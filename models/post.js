@@ -16,13 +16,13 @@ const postSchema = new Schema({
   upvotes: { type: Number, default: 0 },
   downvotes: { type: Number, default: 0 },
 
-  votesBy: [
-    {
-      user: { type: Schema.Types.ObjectId, ref: "User" },
-      type: { type: String, enum: ["up", "down"] }
-    }
-  ],
-
+  votesBy: {
+  type: [{
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    type: { type: String, enum: ["up", "down"] }
+  }],
+  default: []
+},
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   author: { type: Schema.Types.ObjectId, ref: "User", required: true }
 
