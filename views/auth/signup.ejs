@@ -1,26 +1,54 @@
 <%- include('../layouts/boilerplate') %>
-<link rel="stylesheet" href="/login_signup.css">
+<link rel="stylesheet" href="/auth.css">
 
 <div class="auth-wrapper">
   <div class="auth-card">
 
-    <h3>Create Account</h3>
+    <header class="auth-header">
+      <h2>Create Account</h2>
+      <p>Join the Community X</p>
+    </header>
 
-    <form action="/signup" method="POST">
+    <form action="/signup" method="POST" class="auth-form" novalidate>
 
-      <div class="mb-3">
-        <input type="text" name="username" placeholder="Username" required class="form-control dark-input">
+      <div class="auth-input">
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          autocomplete="username"
+          required
+        >
       </div>
 
-      <div class="mb-3">
-        <input type="email" name="email" placeholder="Email" required class="form-control dark-input">
+      <div class="auth-input">
+        <input
+          type="email"
+          name="email"
+          placeholder="Email address"
+          autocomplete="email"
+          required
+        >
       </div>
 
-      <div class="mb-3">
-        <input type="password" name="password" placeholder="Password" required class="form-control dark-input">
+      <div class="auth-input">
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          autocomplete="new-password"
+          required
+        >
       </div>
 
-      <button type="submit" class="btn btn-primary w-100">Create Account</button>
+      <button type="submit" class="auth-btn">
+        Create Account
+      </button>
+
+      <div class="auth-footer">
+        Already have an account?
+        <a href="/login">Log in</a>
+      </div>
 
     </form>
 

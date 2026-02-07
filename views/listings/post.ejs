@@ -1,24 +1,22 @@
 <%- include('../layouts/boilerplate') %>
+
 <link rel="stylesheet" href="/css/show.css">
-<link rel="stylesheet" href="/css/review.css">
+<link rel="stylesheet" href="/css/comments.css">
 
 <div class="main-content">
-
   <div class="main-card">
 
     <!-- ================= POST ================= -->
     <article class="card-outline post-focus">
 
-      <!-- POST META -->
+      <!-- META -->
       <header class="post-header">
         <span class="subreddit">r/community</span>
         <span class="dot">•</span>
         <span class="post-meta">
-          Posted by <strong><%= post.author?.username || "Unknown" %></strong>
+          Posted by
+          <strong><%= post.author?.username || "Unknown" %></strong>
           <span class="dot">•</span>
-          <time datetime="<%= post.createdAt %>" class="timeago">
-            <%= new Date(post.createdAt).toLocaleString() %>
-          </time>
         </span>
       </header>
 
@@ -31,88 +29,40 @@
       <% } %>
 
       <!-- IMAGE -->
-      <% if (post.image?.url) { %>
+      <% if (post.image && post.image.url) { %>
         <div class="post-media">
-          <img src="<%= post.image.url %>" alt="Post image" loading="lazy">
+          <img src="<%= post.image.url %>" alt="Post image">
         </div>
       <% } %>
 
-      <!-- ACTION BAR -->
+      <!-- ACTIONS -->
       <div class="post-actions">
 
-        <button class="vote-btn upvote-btn <%= post.userVote === 'up' ? 'active' : '' %>" data-id="<%= post._id %>">
-          ⬆ <span class="up-count"><%= post.upvotes ?? 0 %></span>
-        </button>
-
-        <button class="vote-btn downvote-btn <%= post.userVote === 'down' ? 'active' : '' %>" data-id="<%= post._id %>">
-          ⬇ <span class="down-count"><%= post.downvotes ?? 0 %></span>
-        </button>
-
-        <button class="action-btn share-btn" onclick="copyLink('<%= post._id %>')">
-          🔗 Share
-        </button>
-
-      </div>
-    </article>
-
-
-    <!-- ================= COMMENTS ================= -->
-    <section class="comments-thread">
-
-      <h3 class="comments-title">
-        💬 Discussion (<%= comments.length %>)
-      </h3>
-
-      <% if (currentUser) { %>
-        <form action="/post/<%= post._id %>/comment" method="POST" class="comment-form">
-          <textarea name="text" required maxlength="500" placeholder="What are your thoughts?"></textarea>
-          <button type="submit">Comment</button>
-        </form>
-      <% } else { %>
-        <div class="login-msg">
-          Login to participate • <a href="/login">Log In</a>
-        </div>
-      <% } %>
-
-      <div class="comment-list">
-
-        <% if (comments.length === 0) { %>
-          <p class="empty-comments">No comments yet. Start the conversation 👇</p>
+        <!-- DELETE (OWNER ONLY) -->
+        <% if (userId && post.author && userId.toString() === post.author._id.toString()) { %>
+          <form
+            action="/post/<%= post._id %>/delete"
+            method="POST"
+            class="inline-form"
+          >
+            <button
+              class="action-btn delete-post-btn"
+              onclick="return confirm('Delete this post permanently?')"
+            >
+              Delete
+            </button>
+          </form>
         <% } %>
 
-        <% comments.forEach(comment => { %>
-          <div class="comment-row">
-
-            <div class="comment-avatar">
-              <%= comment.author?.username?.charAt(0).toUpperCase() || "U" %>
-            </div>
-
-            <div class="comment-body">
-
-              <div class="comment-head">
-                <span class="comment-user"><%= comment.author?.username || "User" %></span>
-                <span class="dot">•</span>
-                <time datetime="<%= comment.createdAt %>" class="timeago comment-time">
-                  <%= new Date(comment.createdAt).toLocaleString() %>
-                </time>
-
-                <% if (currentUser && String(currentUser) === String(comment.author?._id)) { %>
-                  <form action="/comment/<%= comment._id %>/delete" method="POST" class="inline-form">
-                    <button class="delete-comment-btn">Delete</button>
-                  </form>
-                <% } %>
-              </div>
-
-              <p class="comment-text"><%= comment.text %></p>
-
-            </div>
-          </div>
-        <% }) %>
-
       </div>
-    </section>
+
+    </article>
+
+    <!-- ================= COMMENTS ================= -->
+    <%- include('../partials/comments', { post, comments, currentUser }) %>
 
   </div>
 </div>
 
 <script src="/js/script.js"></script>
+<%- include('../layouts/footer') %>

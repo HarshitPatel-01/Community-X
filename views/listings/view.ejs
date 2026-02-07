@@ -22,7 +22,7 @@
     <!-- 📰 MAIN FEED -->
     <div class="main-card">
 
-        <% posts.forEach(post => { %>   <!-- ✅ LOOP START -->
+        <% posts.forEach(post => { %>  
 
         <div class="card-outline post-hover">
 
@@ -42,11 +42,16 @@
                   <p class="post-text"><%= post.description %></p>
                 <% } %>
 
-                <% if (post.image) { %>
-                <div class="post-media">
-                    <img src="/uploads/<%= post.image %>" alt="post image">
+                <% if (post.image && post.image.url) { %>
+                <div class="feed-media">
+                    <img
+                    src="<%= post.image.url %>"
+                    alt="post image"
+                    class="feed-image"
+                    >
                 </div>
-                <% } %>
+<% } %>
+
 
             </div>
 
@@ -65,7 +70,7 @@
 
         </div>
 
-        <% }) %>   <!-- ✅ LOOP END -->
+        <% }) %>   
 
     </div>
 </div>

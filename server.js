@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
+const methodOverride = require("method-override");
 
 const authRoutes = require("./routes/authRoutes");
 const postRoutes = require("./routes/postRoutes");
@@ -20,6 +21,7 @@ mongoose.connect(process.env.MONGO_URI)
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 server.use(express.static(path.join(__dirname, "public")));
+server.use(methodOverride("_method"));
 
 /* ================= SESSION ================= */
 
@@ -41,10 +43,10 @@ server.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
 
-  // ✅ Always string
+  // Always string
   res.locals.currentUser = req.session.username || null;
 
-  // ✅ ID for DB logic
+  // ID for DB logic
   res.locals.userId = req.session.userId || null;
 
   next();

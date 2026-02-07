@@ -1,37 +1,44 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-const Comment = require("./comment");
 
-const postSchema = new Schema({
-  title: { type: String, required: true },
-  text: String,
-
-  image: {
-  type: String,
-  default: null
-},
-
-  subreddit: { type: String, default: "general" },
-
-  upvotes: { type: Number, default: 0 },
-  downvotes: { type: Number, default: 0 },
-
-  votesBy: {
-  type: [{
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    type: { type: String, enum: ["up", "down"] }
-  }],
-  default: []
-},
-  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-  author: { type: Schema.Types.ObjectId, ref: "User", required: true }
-
-}, { timestamps: true });
-
-postSchema.post("findOneAndDelete", async (post) => {
-  if (post) {
-    await Comment.deleteMany({ _id: { $in: post.comments } });
+const imageSchema = new mongoose.Schema({
+  url: {
+    type: String,
+    required: true
+  },
+  filename: {
+    type: String,
+    required: true
   }
 });
 
-module.exports = mongoose.model("Post", postSchema);
+const postSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true
+    },
+    description: String,
+
+    image: imageSchema,
+
+    author: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    },
+
+    upvotes: {
+      type: Number,
+      default: 0
+    },
+
+    downvotes: {
+      type: Number,
+      default: 0
+    }
+  },
+  { timestamps: true }
+);
+
+module.exports =
+  mongoose.models.Post || mongoose.model("Post", postSchema);

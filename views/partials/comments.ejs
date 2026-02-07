@@ -1,0 +1,72 @@
+<link rel="stylesheet" href="/css/comment.css">
+<section class="comments-thread">
+
+  <h3 class="comments-title">
+    💬 Discussion (<%= comments.length %>)
+  </h3>
+
+  <% if (currentUser) { %>
+    <form
+      action="/post/<%= post._id %>/comment"
+      method="POST"
+      class="comment-form"
+    >
+      <textarea
+        name="text"
+        required
+        maxlength="500"
+        placeholder="What are your thoughts?"></textarea>
+
+      <button type="submit">Comment</button>
+    </form>
+  <% } else { %>
+    <div class="login-msg">
+      Login to participate • <a href="/login">Log In</a>
+    </div>
+  <% } %>
+
+  <div class="comment-list">
+
+    <% if (comments.length === 0) { %>
+      <p class="empty-comments">
+        No comments yet. Start the conversation 👇
+      </p>
+    <% } %>
+
+    <% comments.forEach(comment => { %>
+      <div class="comment-row">
+
+        <div class="comment-avatar">
+          <%= comment.author?.username?.charAt(0).toUpperCase() || "U" %>
+        </div>
+
+        <div class="comment-body">
+
+          <div class="comment-head">
+            <span class="comment-user">
+              <%= comment.author?.username || "User" %>
+            </span>
+            <span class="dot">•</span>
+            <time datetime="<%= comment.createdAt %>">
+              <%= new Date(comment.createdAt).toLocaleString() %>
+            </time>
+
+            <% if (currentUser && String(currentUser) === String(comment.author?._id)) { %>
+              <form
+                action="/comment/<%= comment._id %>/delete"
+                method="POST"
+                class="inline-form"
+              >
+                <button class="delete-comment-btn">Delete</button>
+              </form>
+            <% } %>
+          </div>
+
+          <p class="comment-text"><%= comment.text %></p>
+
+        </div>
+      </div>
+    <% }) %>
+
+  </div>
+</section>

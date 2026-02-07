@@ -1,17 +1,19 @@
-
 /* =====================================================
-   📦 POST CARDS
+   📦 POST CARDS (COMMON)
 ===================================================== */
-.main-card { width: 100%; max-width: 760px; }
+.main-card {
+  width: 100%;
+  max-width: 760px;
+}
 
 .card-outline {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 20px;
-  transition: 0.25s ease;
-  box-shadow: var(--shadow-soft);
   margin-bottom: 20px;
+  box-shadow: var(--shadow-soft);
+  transition: 0.25s ease;
 }
 
 .card-outline:hover {
@@ -20,18 +22,56 @@
   box-shadow: var(--shadow-hover);
 }
 
-.card-title { font-size: 18px; font-weight: 600; }
-.card-text { color: var(--text-muted); font-size: 14px; }
-.post-header { font-size: 13px; color: var(--text-muted); }
+.post-header {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.card-text {
+  font-size: 14px;
+  color: var(--text-muted);
+}
 
 /* =====================================================
-   🎞 MEDIA
+   📰 FEED IMAGE (SMALL PREVIEW – HOME / VIEW PAGE)
 ===================================================== */
+.feed-media {
+  margin-top: 0.6rem;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+  max-height: 180px;
+}
+
+.feed-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover; /* thumbnail crop */
+  display: block;
+}
+
+/* =====================================================
+   📄 SINGLE POST IMAGE (LARGE & READABLE)
+===================================================== */
+.post-media {
+  margin-top: 0.75rem;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000;
+}
+
 .post-media img,
 .post-media video {
   width: 100%;
-  border-radius: 10px;
-  margin-top: 12px;
+  max-height: none;        /* 🔑 NO shrinking */
+  height: auto;
+  object-fit: contain;     /* 🔑 readable text images */
+  display: block;
 }
 
 /* =====================================================
@@ -57,7 +97,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  transition: 0.2s;
+  transition: 0.2s ease;
 }
 
 .action-btn:hover,
@@ -68,14 +108,17 @@
   transform: translateY(-2px);
 }
 
+/* =====================================================
+   👍 VOTE STATES
+===================================================== */
 .upvote-btn.active {
   color: #ff4500;
   border-color: #ff4500;
-  background: rgba(255,69,0,0.12);
+  background: rgba(255, 69, 0, 0.12);
 }
 
 .downvote-btn.active {
   color: #4ea3ff;
   border-color: #4ea3ff;
-  background: rgba(78,163,255,0.12);
+  background: rgba(78, 163, 255, 0.12);
 }

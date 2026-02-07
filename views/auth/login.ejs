@@ -1,24 +1,19 @@
 <%- include('../layouts/boilerplate') %>
-
 <link rel="stylesheet" href="/auth.css">
 
 <div class="auth-wrapper">
-  <div class="auth-card" role="region" aria-labelledby="login-title">
+  <div class="auth-card">
 
     <header class="auth-header">
-      <h2 id="login-title">Welcome Back</h2>
+      <h2>Welcome Back</h2>
       <p>Log in to continue your journey</p>
     </header>
 
     <form action="/login" method="POST" class="auth-form" novalidate>
 
-      <!-- EMAIL -->
       <div class="auth-input">
-        <label class="sr-only" for="email">Email</label>
-        <i class="bi bi-envelope"></i>
-        <input 
+        <input
           type="email"
-          id="email"
           name="email"
           placeholder="Email address"
           autocomplete="email"
@@ -26,26 +21,14 @@
         >
       </div>
 
-      <!-- PASSWORD -->
       <div class="auth-input">
-        <label class="sr-only" for="password">Password</label>
-        <i class="bi bi-lock"></i>
-        <input 
+        <input
           type="password"
           name="password"
           placeholder="Password"
-          id="password"
           autocomplete="current-password"
           required
         >
-        <button 
-          type="button"
-          class="toggle-pass"
-          aria-label="Toggle password visibility"
-          onclick="togglePassword(this)"
-        >
-          <i class="bi bi-eye"></i>
-        </button>
       </div>
 
       <div class="auth-options">
@@ -62,8 +45,8 @@
 
       <div class="auth-divider">OR</div>
 
-      <button type="button" class="google-btn" aria-label="Login with Google">
-        <img 
+      <button type="button" class="google-btn">
+        <img
           src="https://www.svgrepo.com/show/475656/google-color.svg"
           alt="Google logo"
         >
@@ -80,5 +63,5 @@
   </div>
 </div>
 
-
+<script src="/js/auth.js"></script>
 <%- include('../layouts/footer') %>

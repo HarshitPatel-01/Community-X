@@ -44,7 +44,7 @@
 
             <% if (currentUser) { %>
 
-                <!-- 🔥 CREATE POST BUTTON -->
+                <!-- CREATE POST BUTTON -->
                 
              
                 <a href="/post/new" class="create-post-btn">
@@ -52,7 +52,7 @@
                 </a>
 
                 <span class="nav-link text-light">
-                    Hello, <strong><%= currentUser.username %></strong>
+                    Hello,<strong><%= currentUser.username %></strong>
                 </span>
 
                 <a class="nav-link" href="/logout">Logout</a>
@@ -87,6 +87,11 @@
         <li class="nav-item">
             <a class="nav-link" href="#">
                 <i class="bi bi-compass"></i> Explore
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">
+                <i class="fa-solid fa-people-group"></i> Community
             </a>
         </li>
     </ul>
