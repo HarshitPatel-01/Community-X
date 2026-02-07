@@ -1,0 +1,217 @@
+
+/* =====================================================
+   💬 COMMENTS
+===================================================== */
+.comments-section {
+  margin-top: 25px;
+  border-top: 1px solid var(--border);
+  padding-top: 18px;
+}
+
+.comment {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 14px;
+  border-radius: 10px;
+  margin-top: 14px;
+}
+
+.comment strong { color: var(--primary); }
+
+/* =====================================================
+   💬 COMMENTS SECTION (SEPARATE FROM POST)
+===================================================== */
+
+.comments-thread {
+  width: 100%;
+  max-width: 760px;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.comments-title {
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+
+/* Form */
+.comment-form textarea {
+  width: 100%;
+  min-height: 80px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  color: white;
+  resize: none;
+}
+
+.comment-form button {
+  margin-top: 8px;
+  background: var(--primary);
+  border: none;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.comment-form button:hover {
+  background: var(--primary-hover);
+}
+
+.login-msg {
+  color: var(--text-muted);
+  margin-bottom: 15px;
+}
+
+/* Comment rows */
+.comment-row {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.comment-avatar {
+  font-size: 28px;
+  color: var(--text-muted);
+}
+
+.comment-body {
+  flex: 1;
+}
+
+.comment-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.comment-user {
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 14px;
+}
+
+.comment-text {
+  font-size: 14px;
+  color: #ddd;
+  line-height: 1.6;
+}
+
+/* Delete button */
+.delete-comment-btn {
+  background: transparent;
+  border: none;
+  color: var(--danger);
+  font-size: 12px;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.delete-comment-btn:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+/* Title */
+.comments-title {
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Divider between post & comments */
+.post-card {
+  margin-bottom: 10px;
+}
+
+/* Comment list spacing */
+.comment-list {
+  margin-top: 18px;
+}
+.post-focus {
+  padding: 28px;
+  border-radius: 16px;
+}
+
+.post-title-big {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 10px 0 14px;
+}
+
+.post-text {
+  font-size: 15px;
+  color: #cfd3d8;
+  line-height: 1.7;
+}
+
+.dot {
+  margin: 0 6px;
+  color: #6c757d;
+}
+
+.vote-btn {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 20px;
+  color: var(--text-muted);
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  transition: 0.2s;
+}
+
+.vote-btn:hover {
+  background: #2a2f34;
+  color: white;
+}
+
+.comment-avatar {
+  width: 36px;
+  height: 36px;
+  background: #2d3136;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+}
+/* =====================================================
+   🗑️ DELETE COMMENT BUTTON
+===================================================== */
+.delete-comment-btn {
+  margin-top: 6px;
+  background: transparent;
+  border: 1px solid rgba(255, 107, 107, 0.4);
+  color: var(--danger);
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Hover effect */
+.delete-comment-btn:hover {
+  background: rgba(255, 107, 107, 0.12);
+  border-color: var(--danger);
+  transform: translateY(-1px);
+}
+
+/* Click press */
+.delete-comment-btn:active {
+  transform: scale(0.95);
+}
+
+/* Optional icon spacing if using icon */
+.delete-comment-btn i {
+  margin-right: 4px;
+}

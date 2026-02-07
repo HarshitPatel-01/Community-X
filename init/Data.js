@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const Post = require("../models/post");
 const User = require("../models/user");
-const { data } = require("./samplePosts"); // ✅ CORRECT FILE
+const { data } = require("./samplePosts"); 
 
-mongoose.connect("mongodb://127.0.0.1:27017/redditClone");
+mongoose.connect("mongodb://127.0.0.1:27017/CommunityX");
 
 const seedDB = async () => {
   await Post.deleteMany({});

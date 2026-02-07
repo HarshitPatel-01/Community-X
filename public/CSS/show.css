@@ -1,0 +1,81 @@
+
+/* =====================================================
+   📦 POST CARDS
+===================================================== */
+.main-card { width: 100%; max-width: 760px; }
+
+.card-outline {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  transition: 0.25s ease;
+  box-shadow: var(--shadow-soft);
+  margin-bottom: 20px;
+}
+
+.card-outline:hover {
+  background: var(--bg-soft);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+}
+
+.card-title { font-size: 18px; font-weight: 600; }
+.card-text { color: var(--text-muted); font-size: 14px; }
+.post-header { font-size: 13px; color: var(--text-muted); }
+
+/* =====================================================
+   🎞 MEDIA
+===================================================== */
+.post-media img,
+.post-media video {
+  width: 100%;
+  border-radius: 10px;
+  margin-top: 12px;
+}
+
+/* =====================================================
+   🔘 ACTION BUTTONS
+===================================================== */
+.post-actions {
+  display: flex;
+  gap: 16px;
+  border-top: 1px solid var(--border);
+  margin-top: 14px;
+  padding-top: 12px;
+}
+
+.action-btn,
+.upvote-btn,
+.downvote-btn {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.2s;
+}
+
+.action-btn:hover,
+.upvote-btn:hover,
+.downvote-btn:hover {
+  background: #2a2f34;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.upvote-btn.active {
+  color: #ff4500;
+  border-color: #ff4500;
+  background: rgba(255,69,0,0.12);
+}
+
+.downvote-btn.active {
+  color: #4ea3ff;
+  border-color: #4ea3ff;
+  background: rgba(78,163,255,0.12);
+}

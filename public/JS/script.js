@@ -92,3 +92,19 @@ function showFlash(message, type = "error") {
   wrapper.appendChild(flash);
   setTimeout(() => removeFlash(flash), 3000);
 }
+
+
+
+document.getElementById("imageInput").addEventListener("change", function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      const img = document.getElementById("previewImage");
+      img.src = event.target.result;
+      img.style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  }
+});
+

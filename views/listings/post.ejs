@@ -1,93 +1,118 @@
 <%- include('../layouts/boilerplate') %>
+<link rel="stylesheet" href="/css/show.css">
+<link rel="stylesheet" href="/css/review.css">
 
 <div class="main-content">
+
   <div class="main-card">
 
-    <!-- 🧱 POST CARD -->
-    <div class="card-outline post-hover">
+    <!-- ================= POST ================= -->
+    <article class="card-outline post-focus">
 
-      <div class="post-header">
+      <!-- POST META -->
+      <header class="post-header">
         <span class="subreddit">r/community</span>
-        <span class="post-meta">• Posted by <%= post.author.username %></span>
-      </div>
+        <span class="dot">•</span>
+        <span class="post-meta">
+          Posted by <strong><%= post.author?.username || "Unknown" %></strong>
+          <span class="dot">•</span>
+          <time datetime="<%= post.createdAt %>" class="timeago">
+            <%= new Date(post.createdAt).toLocaleString() %>
+          </time>
+        </span>
+      </header>
 
-      <h2 class="card-title"><%= post.title %></h2>
+      <!-- TITLE -->
+      <h1 class="post-title-big"><%= post.title %></h1>
 
+      <!-- TEXT -->
       <% if (post.description) { %>
-        <p class="card-text"><%= post.description %></p>
+        <p class="post-text"><%= post.description %></p>
       <% } %>
 
-      <% if (post.image && post.image.url) { %>
-      <div class="post-media">
-        <img src="<%= post.image.url %>" alt="post image">
-      </div>
+      <!-- IMAGE -->
+      <% if (post.image?.url) { %>
+        <div class="post-media">
+          <img src="<%= post.image.url %>" alt="Post image" loading="lazy">
+        </div>
       <% } %>
 
+      <!-- ACTION BAR -->
       <div class="post-actions">
-        <button type="button" class="action-btn upvote-btn" data-id="<%= post._id %>">
+
+        <button class="vote-btn upvote-btn <%= post.userVote === 'up' ? 'active' : '' %>" data-id="<%= post._id %>">
           ⬆ <span class="up-count"><%= post.upvotes ?? 0 %></span>
         </button>
 
-        <button type="button" class="action-btn downvote-btn" data-id="<%= post._id %>">
+        <button class="vote-btn downvote-btn <%= post.userVote === 'down' ? 'active' : '' %>" data-id="<%= post._id %>">
           ⬇ <span class="down-count"><%= post.downvotes ?? 0 %></span>
         </button>
 
-        <button type="button" class="action-btn share-btn" onclick="copyLink('<%= post._id %>')">
+        <button class="action-btn share-btn" onclick="copyLink('<%= post._id %>')">
           🔗 Share
         </button>
+
       </div>
+    </article>
 
-    </div>
 
+    <!-- ================= COMMENTS ================= -->
+    <section class="comments-thread">
 
-    <!-- 💬 COMMENTS CARD (SEPARATE FROM POST) -->
-    <!-- 💬 COMMENTS THREAD (NOT A CARD) -->
-<section class="comments-thread">
+      <h3 class="comments-title">
+        💬 Discussion (<%= comments.length %>)
+      </h3>
 
-  <h4 class="comments-title">
-    💬 Comments (<%= comments.length %>)
-  </h4>
-
-  <% if (currentUser) { %>
-  <form action="/post/<%= post._id %>/comment" method="POST" class="comment-form">
-    <textarea name="text" required placeholder="Join the discussion..."></textarea>
-    <button type="submit">Comment</button>
-  </form>
-  <% } else { %>
-    <p class="login-msg">Login to join the discussion</p>
-  <% } %>
-
-  <div class="comment-list">
-    <% comments.forEach(comment => { %>
-      <div class="comment-row">
-
-        <div class="comment-avatar">
-          <i class="bi bi-person-circle"></i>
+      <% if (currentUser) { %>
+        <form action="/post/<%= post._id %>/comment" method="POST" class="comment-form">
+          <textarea name="text" required maxlength="500" placeholder="What are your thoughts?"></textarea>
+          <button type="submit">Comment</button>
+        </form>
+      <% } else { %>
+        <div class="login-msg">
+          Login to participate • <a href="/login">Log In</a>
         </div>
+      <% } %>
 
-        <div class="comment-body">
-          <div class="comment-head">
-            <span class="comment-user"><%= comment.author.username %></span>
+      <div class="comment-list">
 
-            <% if (currentUser && String(currentUser) === String(comment.author._id)) { %>
-            <form action="/comment/<%= comment._id %>/delete" method="POST">
-              <button class="delete-comment-btn">Delete</button>
-            </form>
-            <% } %>
+        <% if (comments.length === 0) { %>
+          <p class="empty-comments">No comments yet. Start the conversation 👇</p>
+        <% } %>
+
+        <% comments.forEach(comment => { %>
+          <div class="comment-row">
+
+            <div class="comment-avatar">
+              <%= comment.author?.username?.charAt(0).toUpperCase() || "U" %>
+            </div>
+
+            <div class="comment-body">
+
+              <div class="comment-head">
+                <span class="comment-user"><%= comment.author?.username || "User" %></span>
+                <span class="dot">•</span>
+                <time datetime="<%= comment.createdAt %>" class="timeago comment-time">
+                  <%= new Date(comment.createdAt).toLocaleString() %>
+                </time>
+
+                <% if (currentUser && String(currentUser) === String(comment.author?._id)) { %>
+                  <form action="/comment/<%= comment._id %>/delete" method="POST" class="inline-form">
+                    <button class="delete-comment-btn">Delete</button>
+                  </form>
+                <% } %>
+              </div>
+
+              <p class="comment-text"><%= comment.text %></p>
+
+            </div>
           </div>
-
-          <p class="comment-text"><%= comment.text %></p>
-        </div>
+        <% }) %>
 
       </div>
-    <% }) %>
-  </div>
-
-</section>
-
+    </section>
 
   </div>
 </div>
 
 <script src="/js/script.js"></script>
-<%- include('../layouts/footer') %>

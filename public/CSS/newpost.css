@@ -1,0 +1,200 @@
+/* =========================================
+   FULL PAGE LAYOUT
+========================================= */
+html, body {
+  height: 100%;
+}
+
+.main-content {
+  flex: 1;
+  min-height: calc(100vh - 80px);
+  display: flex;
+  justify-content: center;
+  align-items: center; /* centers vertically */
+}
+
+/* =========================================
+   WRAPPER
+========================================= */
+.create-post-page {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* =========================================
+   CARD
+========================================= */
+.create-card {
+  width: 100%;
+  max-width: 760px;
+  background: linear-gradient(145deg, #1a1a1b, #181a1d);
+  border: 1px solid #2d3136;
+  border-radius: 14px;
+  padding: 26px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.45);
+  animation: fadeIn 0.35s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================
+   HEADER
+========================================= */
+.create-top {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.avatar {
+  width: 46px;
+  height: 46px;
+  background: linear-gradient(135deg, #ff4500, #ff7a18);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  color: white;
+  box-shadow: 0 0 10px rgba(255,69,0,0.4);
+}
+
+.title-area h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.title-area span {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+/* =========================================
+   INPUTS
+========================================= */
+.post-form input,
+.post-form textarea {
+  width: 100%;
+  background: #232527;
+  border: 1px solid #2f3338;
+  border-radius: 10px;
+  padding: 14px;
+  color: white;
+  margin-bottom: 16px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.post-form input:focus,
+.post-form textarea:focus {
+  border-color: #4f8cff;
+  box-shadow: 0 0 0 2px rgba(79,140,255,0.2);
+  outline: none;
+}
+
+.post-form textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+/* =========================================
+   TITLE CHARACTER COUNT
+========================================= */
+.input-group {
+  position: relative;
+}
+
+.char-count {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  font-size: 12px;
+  color: #777;
+}
+
+/* =========================================
+   IMAGE UPLOAD BOX
+========================================= */
+.image-box {
+  border: 2px dashed #333;
+  border-radius: 12px;
+  padding: 26px;
+  text-align: center;
+  margin-bottom: 20px;
+  background: #1c1e21;
+  transition: all 0.25s ease;
+}
+
+.image-box:hover {
+  border-color: #4f8cff;
+  background: #202327;
+}
+
+.image-box.has-image {
+  border: none;
+  padding: 0;
+  background: transparent;
+}
+
+.image-btn {
+  background: #2c2f34;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-block;
+  transition: 0.2s;
+}
+
+.image-btn:hover {
+  background: #3a3f46;
+}
+
+#previewImage {
+  max-width: 100%;
+  border-radius: 12px;
+  display: none;
+}
+
+/* =========================================
+   ACTION BAR
+========================================= */
+.post-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+/* Post button */
+.submit-btn {
+  background: linear-gradient(135deg, #ff4500, #ff7a18);
+  border: none;
+  padding: 12px 26px;
+  border-radius: 24px;
+  font-weight: 700;
+  color: white;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 20px rgba(255,69,0,0.3);
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(255,69,0,0.45);
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+@media (max-width: 768px) {
+  .create-card {
+    border-radius: 0;
+    max-width: 100%;
+    min-height: calc(100vh - 80px);
+  }
+}
