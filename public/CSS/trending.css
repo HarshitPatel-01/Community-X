@@ -1,0 +1,66 @@
+
+/* =====================================================
+  TRENDING STRIP
+===================================================== */
+.trending-wrapper {
+  width: 100%;
+  max-width: 1100px;
+  margin: 30px auto;
+  overflow: hidden;
+  position: relative;
+  padding: 20px 0;
+}
+
+.top-items {
+  display: flex;
+  gap: 22px;
+  width: max-content;
+  animation: scrollTrending 28s linear infinite;
+}
+
+.trending-wrapper:hover .top-items {
+  animation-play-state: paused;
+}
+
+@keyframes scrollTrending {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.trending-wrapper::before,
+.trending-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 80px;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.trending-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, var(--bg-main), transparent);
+}
+
+.trending-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, var(--bg-main), transparent);
+}
+
+/* TRENDING CARDS */
+.trending-card {
+  min-width: 260px;
+  background: linear-gradient(145deg, var(--bg-card), #14171a);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: var(--shadow-soft);
+  transition: all 0.25s ease;
+}
+
+.trending-card:hover {
+  transform: translateY(-6px) scale(1.04);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--primary);
+}

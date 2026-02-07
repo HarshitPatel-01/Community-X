@@ -1,30 +1,78 @@
 <%- include('../layouts/boilerplate') %>
 
+<link rel="stylesheet" href="/auth.css">
+
 <div class="auth-wrapper">
-  <div class="auth-card">
+  <div class="auth-card" role="region" aria-labelledby="login-title">
 
-    <h3 class="auth-title">Welcome Back</h3>
-    <p class="auth-subtitle">Log in to continue your journey</p>
+    <header class="auth-header">
+      <h2 id="login-title">Welcome Back</h2>
+      <p>Log in to continue your journey</p>
+    </header>
 
-    <form action="/login" method="POST">
+    <form action="/login" method="POST" class="auth-form" novalidate>
 
       <!-- EMAIL -->
-      <div class="input-group auth-input">
+      <div class="auth-input">
+        <label class="sr-only" for="email">Email</label>
         <i class="bi bi-envelope"></i>
-        <input type="email" name="email" placeholder="Email address" required>
+        <input 
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Email address"
+          autocomplete="email"
+          required
+        >
       </div>
 
       <!-- PASSWORD -->
-      <div class="input-group auth-input">
+      <div class="auth-input">
+        <label class="sr-only" for="password">Password</label>
         <i class="bi bi-lock"></i>
-        <input type="password" name="password" placeholder="Password" id="password" required>
-        <i class="bi bi-eye toggle-pass" onclick="togglePassword()"></i>
+        <input 
+          type="password"
+          name="password"
+          placeholder="Password"
+          id="password"
+          autocomplete="current-password"
+          required
+        >
+        <button 
+          type="button"
+          class="toggle-pass"
+          aria-label="Toggle password visibility"
+          onclick="togglePassword(this)"
+        >
+          <i class="bi bi-eye"></i>
+        </button>
       </div>
 
-      <button type="submit" class="auth-btn">Log In</button>
+      <div class="auth-options">
+        <label>
+          <input type="checkbox" name="remember">
+          Remember me
+        </label>
+        <a href="/forgot-password">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="auth-btn">
+        Log In
+      </button>
+
+      <div class="auth-divider">OR</div>
+
+      <button type="button" class="google-btn" aria-label="Login with Google">
+        <img 
+          src="https://www.svgrepo.com/show/475656/google-color.svg"
+          alt="Google logo"
+        >
+        Continue with Google
+      </button>
 
       <div class="auth-footer">
-        Don’t have an account? <a href="/signup">Sign up</a>
+        Don’t have an account?
+        <a href="/signup">Sign up</a>
       </div>
 
     </form>
@@ -32,11 +80,5 @@
   </div>
 </div>
 
-<script>
-function togglePassword() {
-  const pass = document.getElementById("password");
-  pass.type = pass.type === "password" ? "text" : "password";
-}
-</script>
 
 <%- include('../layouts/footer') %>

@@ -1,26 +1,66 @@
 <%- include('../layouts/boilerplate') %>
+<link rel="stylesheet" href="/css/newpost.css">
+<div class="create-post-page">
 
-<div class="create-post-container">
-  <div class="create-post-card">
+  <div class="create-card">
 
-    <h2>📝 Make a Post</h2>
+    <!-- HEADER -->
+    <div class="create-top">
+      <div class="avatar"><%= currentUser ? currentUser.charAt(0).toUpperCase() : "U" %></div>
+      <div class="title-area">
+        <h2>Create a post</h2>
+        <span>Share something interesting with the community</span>
+      </div>
+    </div>
 
-    <form action="/post/new" method="POST" enctype="multipart/form-data" class="create-post-form">
+    <form action="/post/new" method="POST" enctype="multipart/form-data" class="post-form">
 
-      <label>Title</label>
-      <input type="text" name="title" placeholder="Enter a catchy title..." required>
+      <!-- TITLE -->
+      <div class="input-group">
+        <input type="text" name="title" id="titleInput" placeholder="Title" maxlength="200" required>
+        <span class="char-count"><span id="charNum">0</span>/200</span>
+      </div>
 
-      <label>Description</label>
-      <textarea name="description" placeholder="Write something interesting..."></textarea>
+      <!-- TEXT -->
+      <textarea name="description" placeholder="Text (optional)"></textarea>
 
-      <label>Image (optional)</label>
-      <input type="file" name="image">
+      <!-- IMAGE PREVIEW BOX -->
+      <div class="image-box" id="imageBox">
+        <label class="image-btn">
+          📷 Add Image
+          <input type="file" name="image" id="imageInput" hidden>
+        </label>
+        <img id="previewImage">
+      </div>
 
-      <button type="submit">🚀 Post</button>
+
+      <!-- ACTION BAR -->
+      <div class="post-actions">
+        <button type="submit" class="submit-btn">Post</button>
+      </div>
 
     </form>
-
   </div>
 </div>
+
+<script>
+const input = document.getElementById("titleInput");
+const count = document.getElementById("charNum");
+input.addEventListener("input", () => count.textContent = input.value.length);
+
+document.getElementById("imageInput").addEventListener("change", e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = document.getElementById("previewImage");
+    const box = document.getElementById("imageBox");
+    img.src = ev.target.result;
+    img.style.display = "block";
+    box.classList.add("has-image");
+  };
+  reader.readAsDataURL(file);
+});
+</script>
 
 <%- include('../layouts/footer') %>

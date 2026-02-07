@@ -1,17 +1,47 @@
 <%- include('../layouts/boilerplate') %>
+<link rel="stylesheet" href="/css/trending.css">
 
-<div class="main-card">
-    <h2>🔥 Trending Posts</h2>
+<div class="main-content">
+
+  <div class="main-card">
+
+    <h2 class="trending-title">🔥 Trending Posts</h2>
 
     <% posts.forEach(post => { %>
-    <div class="card-outline" onclick="location.href='/post/<%= post._id %>'" style="cursor:pointer;">
-        <h5><%= post.title %></h5>
-        <p><%= post.description %></p>
-        <div class="post-actions">
-            <span>⬆ <%= post.votes %> votes</span>
-        </div>
-    </div>
+    <article class="card-outline trending-post" onclick="location.href='/post/<%= post._id %>'">
+
+      <div class="post-header">
+        <span class="subreddit">r/community</span>
+        <span class="dot">•</span>
+        <span class="post-meta">
+          Posted by <%= post.author?.username || "User" %>
+        </span>
+      </div>
+
+      <h3 class="trending-post-title"><%= post.title %></h3>
+
+      <% if (post.description) { %>
+        <p class="trending-post-text">
+          <%= post.description.length > 120 ? post.description.substring(0,120) + "..." : post.description %>
+        </p>
+      <% } %>
+
+      <% if (post.image) { %>
+      <div class="post-media">
+        <img src="/uploads/<%= post.image %>" alt="post image">
+      </div>
+      <% } %>
+
+      <div class="post-actions trending-actions">
+        <span class="vote-count">⬆ <%= (post.upvotes || 0) - (post.downvotes || 0) %></span>
+        <span class="comment-count">💬 View Discussion</span>
+      </div>
+
+    </article>
     <% }) %>
+
+  </div>
+
 </div>
 
 <%- include('../layouts/footer') %>

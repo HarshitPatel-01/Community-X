@@ -7,9 +7,9 @@ const postSchema = new Schema({
   text: String,
 
   image: {
-    url: String,
-    filename: String
-  },
+  type: String,
+  default: null
+},
 
   subreddit: { type: String, default: "general" },
 
