@@ -95,3 +95,47 @@ exports.logoutUser = (req, res) => {
     res.redirect("/home");
   });
 };
+
+
+/* ================= SETTINGS PAGE ================= */
+exports.getSettings = (req, res) => {
+  res.render("auth/settings");
+};
+
+
+/* ================= CHANGE PASSWORD ================= */
+exports.changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    if (newPassword !== confirmPassword) {
+      req.flash("error", "New passwords do not match.");
+      return res.redirect("/settings");
+    }
+
+    if (newPassword.length < 6) {
+      req.flash("error", "Password must be at least 6 characters.");
+      return res.redirect("/settings");
+    }
+
+    const user = await User.findById(req.session.userId);
+    if (!user) return res.redirect("/login");
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      req.flash("error", "Current password is incorrect.");
+      return res.redirect("/settings");
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+
+    req.flash("success", "Password updated successfully.");
+    res.redirect("/settings");
+
+  } catch (err) {
+    console.log("CHANGE PASSWORD ERROR:", err);
+    req.flash("error", "Failed to update password.");
+    res.redirect("/settings");
+  }
+};

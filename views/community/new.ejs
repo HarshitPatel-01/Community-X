@@ -1,0 +1,105 @@
+<%- include('../layouts/boilerplate') %>
+<link rel="stylesheet" href="/css/newcommunity.css">
+
+<div class="future-layout">
+
+  <div class="future-main">
+
+    <!-- HERO -->
+    <section class="future-create-hero">
+      <h1>Create a Community</h1>
+      <p>Start something meaningful. Build your campus network.</p>
+    </section>
+
+    <!-- FORM CONTAINER -->
+    <section class="future-create-panel">
+
+      <form action="/community/new" method="POST" enctype="multipart/form-data">
+
+        <!-- AVATAR -->
+        <div class="future-avatar-section">
+
+          <div class="future-avatar-preview" id="avatarPreview">
+            C
+          </div>
+
+          <div class="future-upload">
+            <label for="image">Community Image</label>
+            <input type="file" id="image" name="image" accept="image/*">
+            <small>Optional. Square image works best.</small>
+          </div>
+
+        </div>
+
+        <!-- IDENTITY -->
+        <div class="future-field-group">
+
+          <div class="future-field">
+            <label>Name</label>
+            <div class="future-prefix">
+              <span>c/</span>
+              <input type="text"
+                     name="name"
+                     id="communityName"
+                     placeholder="codingclub"
+                     required>
+            </div>
+          </div>
+
+          <div class="future-field">
+            <label>Title</label>
+            <input type="text"
+                   name="title"
+                   placeholder="Official Coding Club of XYZ College"
+                   required>
+          </div>
+
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="future-field">
+          <label>Description</label>
+          <textarea name="description"
+                    rows="4"
+                    placeholder="Tell students what this community is about.">
+          </textarea>
+        </div>
+
+        <!-- ACTION -->
+        <div class="future-action">
+          <button type="submit" class="future-submit">
+            Launch Community
+          </button>
+        </div>
+
+      </form>
+
+    </section>
+
+  </div>
+
+</div>
+
+<script>
+  const imageInput = document.getElementById('image');
+  const preview = document.getElementById('avatarPreview');
+  const nameInput = document.getElementById('communityName');
+
+  nameInput.addEventListener('input', () => {
+    if (!imageInput.files.length) {
+      preview.textContent =
+        nameInput.value.charAt(0).toUpperCase() || "C";
+    }
+  });
+
+  imageInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        preview.innerHTML = `<img src="${e.target.result}" />`;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+</script>

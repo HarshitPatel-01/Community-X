@@ -2,28 +2,45 @@ const express = require("express");
 const router = express.Router();
 const postController = require("../controllers/postController");
 const { isLoggedIn } = require("../middleware/auth");
-const upload = require("../middleware/upload"); // 🔥 ADD THIS
-const multer = require("multer");
+const upload = require("../middleware/upload");
+const { isPostOwner } = require("../middleware/isPostOwner");
+const Community = require("../models/community");
 
 
 /* ================= HOME & TRENDING ================= */
 router.get("/home", postController.getHome);
 router.get("/trending", postController.getTrending);
+router.get("/popular", postController.getPopular);
 
 
 /* ================= CREATE POST ================= */
 
 // Show create post page
-router.get("/post/new", isLoggedIn, (req, res) => {
-  res.render("listings/new");
+router.get("/post/new", isLoggedIn, async (req, res) => {
+  const communities = await Community.find({}).sort({ name: 1 });
+  let selectedCommunity = null;
+  if (req.query.community) {
+    selectedCommunity = communities.find(
+      c => c.name === req.query.community.toLowerCase()
+    );
+  }
+  res.render("listings/new", { communities, selectedCommunity });
 });
 
-// Submit new post (ORDER IS IMPORTANT)
+// Submit new post (global)
 router.post(
   "/post/new",
-  isLoggedIn,              // 1️⃣ must be logged in
-  upload.single("image"),  // 2️⃣ multer reads form + file
-  postController.createPost // 3️⃣ controller runs
+  isLoggedIn,
+  upload.single("image"),
+  postController.createPost
+);
+
+// Submit new post (from community page)
+router.post(
+  "/r/:name/new",
+  isLoggedIn,              
+  upload.single("image"),  
+  postController.createPost
 );
 
 
@@ -37,7 +54,11 @@ router.post("/api/post/:id/downvote", isLoggedIn, postController.downvoteAjax);
 
 
 /* ================= DELETE POST ================= */
-router.post("/post/:id/delete", isLoggedIn, postController.deletePost);
-
+router.post(
+  "/post/:id/delete",
+  isLoggedIn,    
+  isPostOwner,  
+  postController.deletePost
+);
 
 module.exports = router;

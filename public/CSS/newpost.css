@@ -54,7 +54,7 @@ html, body {
 .avatar {
   width: 46px;
   height: 46px;
-  background: linear-gradient(135deg, #ff4500, #ff7a18);
+  background: var(--primary, #6366f1);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -62,7 +62,7 @@ html, body {
   font-weight: bold;
   font-size: 18px;
   color: white;
-  box-shadow: 0 0 10px rgba(255,69,0,0.4);
+  box-shadow: none;
 }
 
 .title-area h2 {
@@ -73,6 +73,49 @@ html, body {
 .title-area span {
   font-size: 13px;
   color: #9ca3af;
+}
+
+/* =========================================
+   COMMUNITY SELECT
+========================================= */
+.community-select {
+  margin-bottom: 18px;
+}
+
+.community-select label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: #ccc;
+  font-weight: 600;
+}
+
+.community-select label i {
+  color: var(--primary, #6366f1);
+  margin-right: 4px;
+}
+
+.community-dropdown {
+  width: 100%;
+  background: #232527;
+  border: 1px solid #2f3338;
+  border-radius: 10px;
+  padding: 14px;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.community-dropdown:focus {
+  border-color: #4f8cff;
+  box-shadow: 0 0 0 2px rgba(79,140,255,0.2);
+  outline: none;
+}
+
+.community-dropdown option {
+  background: #232527;
+  padding: 10px;
 }
 
 /* =========================================
@@ -155,10 +198,44 @@ html, body {
   background: #3a3f46;
 }
 
+.upload-prompt {
+  text-align: center;
+}
+
 #previewImage {
   max-width: 100%;
   border-radius: 12px;
-  display: none;
+  display: block;
+}
+
+#previewContainer {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.remove-image-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  font-size: 20px;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.remove-image-btn:hover {
+  background: rgba(255, 0, 0, 0.8);
+  transform: scale(1.1);
 }
 
 /* =========================================
@@ -173,19 +250,19 @@ html, body {
 
 /* Post button */
 .submit-btn {
-  background: linear-gradient(135deg, #ff4500, #ff7a18);
+  background: var(--primary, #6366f1);
   border: none;
   padding: 12px 26px;
   border-radius: 24px;
   font-weight: 700;
   color: white;
   transition: all 0.25s ease;
-  box-shadow: 0 6px 20px rgba(255,69,0,0.3);
+  box-shadow: none;
 }
 
 .submit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(255,69,0,0.45);
+  background: var(--primary-hover, #4f46e5);
 }
 
 /* =========================================

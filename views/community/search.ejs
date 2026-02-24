@@ -1,0 +1,142 @@
+<%- include('../layouts/boilerplate') %>
+<link rel="stylesheet" href="/css/show.css">
+<link rel="stylesheet" href="/css/community.css">
+
+<div class="main-content">
+  <div class="main-card">
+
+    <!-- ================= SEARCH HEADER ================= -->
+    <div class="section-header" style="margin-bottom: 1.5rem;">
+      <% if (query) { %>
+        <h2 style="font-size: 1.75rem; font-weight: 700;">Search Results for "<%= query %>"</h2>
+        <p style="color: #9ca3af; font-size: 0.9rem; margin-top: 0.5rem;">
+          Found <%= posts.length %> posts and <%= communities.length %> communities
+        </p>
+      <% } else { %>
+        <h2 style="font-size: 1.75rem; font-weight: 700;">Search</h2>
+        <p style="color: #9ca3af; font-size: 0.9rem; margin-top: 0.5rem;">Enter a search term to find posts and communities</p>
+      <% } %>
+    </div>
+
+    <!-- ================= NO RESULTS ================= -->
+    <% if (query && posts.length === 0 && communities.length === 0) { %>
+      <div class="empty-state">
+        <h3>No results found</h3>
+        <p>Try searching with different keywords</p>
+      </div>
+    <% } %>
+
+    <!-- ================= POSTS RESULTS ================= -->
+    <% if (posts.length > 0) { %>
+      <div class="section-header" style="margin-top: 1rem; margin-bottom: 1rem;">
+        <h3 style="font-size: 1.75rem; font-weight: 700;">Communities (<%= communities.length %>)</h3>
+      </div>
+
+      <% posts.forEach(post => { %>
+      <div class="card-outline post-hover">
+
+        <div class="post-click" onclick="location.href='/post/<%= post._id %>'">
+
+          <div class="post-header">
+            <% if (post.community) { %>
+              <span class="subreddit">r/<%= post.community.name %></span>
+              <span class="dot">•</span>
+            <% } %>
+            <span class="post-meta">
+              Posted by <%= post.author?.username || "User" %>
+            </span>
+          </div>
+
+          <h5 class="post-title"><%= post.title %></h5>
+
+          <% if (post.text) { %>
+            <p class="post-text"><%= post.text.length > 200 ? post.text.substring(0,200) + "..." : post.text %></p>
+          <% } %>
+
+          <% if (post.image && post.image.url) { %>
+          <div class="post-media">
+            <img src="<%= post.image.url %>" alt="post image">
+          </div>
+          <% } %>
+
+        </div>
+
+        <div class="post-actions">
+          <button class="vote-btn upvote-btn" data-id="<%= post._id %>">
+            ⬆ <span class="up-count"><%= post.upvotes || 0 %></span>
+          </button>
+          <button class="vote-btn downvote-btn" data-id="<%= post._id %>">
+            ⬇ <span class="down-count"><%= post.downvotes || 0 %></span>
+          </button>
+          <a href="/post/<%= post._id %>" class="action-btn"><i class="bi bi-chat"></i> Comments</a>
+          <button class="action-btn share-btn" onclick="copyLink('<%= post._id %>', this)"><i class="bi bi-share"></i> Share</button>
+        </div>
+
+      </div>
+      <% }) %>
+    <% } %>
+
+    <!-- ================= COMMUNITIES RESULTS ================= -->
+    <% if (communities.length > 0) { %>
+      <div class="section-header" style="margin-top: 3rem;">
+        <h3 class="trending-title">👥 Communities (<%= communities.length %>)</h3>
+      </div>
+
+      <div class="community-feed">
+        <% communities.forEach(c => { %>
+
+          <div class="community-row">
+
+            <!-- Avatar -->
+            <div class="community-avatar">
+              <% if (c.image && c.image.trim() !== "") { %>
+                <img src="<%= c.image %>" />
+              <% } else { %>
+                <span>
+                  <%= c.name.charAt(0).toUpperCase() %>
+                </span>
+              <% } %>
+            </div>
+
+            <!-- Content -->
+            <div class="community-main">
+              <a href="/r/<%= c.name %>" class="community-title">
+                r/<%= c.name %>
+              </a>
+
+              <div class="community-meta">
+                <%= c.memberCount %> members
+                Created <%= new Date(c.createdAt).toLocaleDateString() %>
+              </div>
+
+              <div class="community-description">
+                <%= c.description || "No description yet." %>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="community-actions">
+              <% if (userId) { %>
+                <form action="/community/<%= c._id %>/join" method="POST">
+                  <button class="btn-join <%= c.isMember ? 'joined' : '' %>">
+                    <%= c.isMember ? "Joined" : "Join" %>
+                  </button>
+                </form>
+              <% } else { %>
+                <a href="/r/<%= c.name %>" class="btn-join">
+                  View
+                </a>
+              <% } %>
+            </div>
+
+          </div>
+
+        <% }) %>
+      </div>
+    <% } %>
+
+  </div>
+</div>
+
+<script src="/js/script.js"></script>
+<%- include('../layouts/footer') %>

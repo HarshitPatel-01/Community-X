@@ -1,0 +1,97 @@
+/* =====================================================
+   COMMUNITY SHOW PAGE
+===================================================== */
+
+/* Hero Section */
+.community-hero {
+  width: 100%;
+  max-width: 760px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 24px 0;
+  flex-wrap: wrap;
+}
+
+.hero-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.community-avatar-lg {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #1a1f25, #12161a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--accent, #06b6d4);
+  flex-shrink: 0;
+}
+
+.community-avatar-lg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+.hero-name {
+  font-size: 24px;
+  margin: 0;
+  font-weight: 700;
+}
+
+.hero-meta {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #8b949e;
+  display: flex;
+  gap: 8px;
+}
+
+.hero-desc {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #c9d1d9;
+  max-width: 500px;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Join Button */
+.future-join {
+  background: var(--primary, #6366f1);
+  color: #fff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 30px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.future-join:hover {
+  background: var(--primary-hover, #4f46e5);
+  transform: translateY(-1px);
+}
+
+.future-join.active {
+  background: var(--bg-soft, #1c2230);
+  color: var(--primary, #6366f1);
+  border: 1px solid var(--primary, #6366f1);
+}
+
+.future-join.active:hover {
+  background: #2a2a2a;
+}

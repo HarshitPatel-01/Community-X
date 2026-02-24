@@ -1,0 +1,106 @@
+<%- include('../layouts/boilerplate') %>
+<link rel="stylesheet" href="/css/community-show.css">
+<link rel="stylesheet" href="/css/show.css">
+
+<div class="main-content">
+
+  <!-- Hero Section -->
+  <div class="community-hero">
+
+    <div class="hero-left">
+      <div class="community-avatar-lg">
+        <% if (community.image && community.image.trim() !== "") { %>
+          <img src="<%= community.image %>" />
+        <% } else { %>
+          <span><%= community.name.charAt(0).toUpperCase() %></span>
+        <% } %>
+      </div>
+
+      <div class="hero-info">
+        <h1 class="hero-name">r/<%= community.name %></h1>
+        <div class="hero-meta">
+          <span><%= community.memberCount %> members</span>
+          <span>•</span>
+          <span>Created <%= new Date(community.createdAt).toLocaleDateString() %></span>
+        </div>
+        <p class="hero-desc"><%= community.description || "A student-driven knowledge hub." %></p>
+      </div>
+    </div>
+
+    <div class="hero-actions">
+      <% if (userId) { %>
+        <form action="/community/<%= community._id %>/join" method="POST">
+          <button class="future-join <%= isMember ? 'active' : '' %>">
+            <%= isMember ? "Joined" : "Join Community" %>
+          </button>
+        </form>
+      <% } %>
+
+      <% if (isMember) { %>
+        <a href="/post/new?community=<%= community.name %>" class="create-post-btn"><i class="bi bi-plus-lg"></i> Create Post</a>
+      <% } %>
+    </div>
+
+  </div>
+
+  <hr style="border-color: var(--border); margin: 20px 0;">
+
+  <!-- Posts Feed (same style as home page) -->
+  <div class="main-card">
+
+    <% posts.forEach(post => { %>
+
+    <div class="card-outline post-hover">
+
+      <div class="post-click" onclick="location.href='/post/<%= post._id %>'">
+
+        <div class="post-header">
+          <span class="subreddit">r/<%= community.name %></span>
+          <span class="dot">•</span>
+          <span class="post-meta">
+            Posted by <%= post.author ? post.author.username : "Unknown" %>
+          </span>
+        </div>
+
+        <h5 class="post-title"><%= post.title %></h5>
+
+        <% if (post.text) { %>
+          <p class="post-text"><%= post.text %></p>
+        <% } %>
+
+        <% if (post.image) { %>
+        <div class="post-media">
+          <img src="<%= post.image.url %>" alt="post image">
+        </div>
+        <% } %>
+
+      </div>
+
+      <div class="post-actions">
+        <button class="vote-btn upvote-btn" data-id="<%= post._id %>">
+          ⬆ <span class="up-count"><%= post.upvotes || 0 %></span>
+        </button>
+        <button class="vote-btn downvote-btn" data-id="<%= post._id %>">
+          ⬇ <span class="down-count"><%= post.downvotes || 0 %></span>
+        </button>
+        <a href="/post/<%= post._id %>" class="action-btn"><i class="bi bi-chat"></i> Comments</a>
+        <button class="action-btn share-btn" onclick="copyLink('<%= post._id %>', this)"><i class="bi bi-share"></i> Share</button>
+      </div>
+
+    </div>
+
+    <% }) %>
+
+    <% if (posts.length === 0) { %>
+      <div class="empty-state">
+        <h3>No posts yet</h3>
+        <p>Be the first to post in this community!</p>
+      </div>
+    <% } %>
+
+  </div>
+
+</div>
+
+<script src="/js/script.js"></script>
+<%- include('../layouts/footer') %>

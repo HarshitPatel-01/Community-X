@@ -2,35 +2,85 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const Comment = require("./comment");
 
-const postSchema = new Schema({
-  title: { type: String, required: true },
-  text: String,
+const postSchema = new Schema(
+  {
+    /* ================= CONTENT ================= */
+    title: {
+      type: String,
+      required: true,
+      trim: true
+    },
 
-  image: {
-  type: String,
-  default: null
-},
+    text: {
+      type: String,
+      trim: true,
+      default: ""
+    },
 
-  subreddit: { type: String, default: "general" },
+    image: {
+      type: {
+        filename: String,
+        url: String
+      },
+      default: null
+    },
 
-  upvotes: { type: Number, default: 0 },
-  downvotes: { type: Number, default: 0 },
+    /* ================= RELATIONS ================= */
+    community: {
+      type: Schema.Types.ObjectId,
+      ref: "Community",
+      default: null
+    },
 
-  votesBy: {
-  type: [{
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    type: { type: String, enum: ["up", "down"] }
-  }],
-  default: []
-},
-  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-  author: { type: Schema.Types.ObjectId, ref: "User", required: true }
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    },
 
-}, { timestamps: true });
+    comments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Comment"
+      }
+    ],
 
-postSchema.post("findOneAndDelete", async (post) => {
+    /* ================= VOTING ================= */
+    upvotes: {
+      type: Number,
+      default: 0
+    },
+
+    downvotes: {
+      type: Number,
+      default: 0
+    },
+
+    votesBy: {
+      type: [
+        {
+          user: {
+            type: Schema.Types.ObjectId,
+            ref: "User"
+          },
+          type: {
+            type: String,
+            enum: ["up", "down"]
+          }
+        }
+      ],
+      default: []
+    }
+  },
+  { timestamps: true }
+);
+
+/* ================= CLEANUP ================= */
+postSchema.post("findOneAndDelete", async function (post) {
   if (post) {
-    await Comment.deleteMany({ _id: { $in: post.comments } });
+    await Comment.deleteMany({
+      _id: { $in: post.comments }
+    });
   }
 });
 

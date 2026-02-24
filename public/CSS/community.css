@@ -1,0 +1,405 @@
+/* ========================= */
+/* MAIN LAYOUT (WITH SIDEBAR) */
+/* ========================= */
+
+/* Use main-content from style.css for outer layout */
+
+/* LEFT SIDE */
+.community-main-area {
+  width: 100%;
+  max-width: 760px;
+}
+
+/* RIGHT SIDE */
+.community-sidebar {
+  width: 280px;
+  position: sticky;
+  top: 90px;
+}
+
+/* ========================= */
+/* HEADER */
+/* ========================= */
+
+.community-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 28px;
+}
+
+.community-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.community-header p {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #8b949e;
+}
+
+.community-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent, #06b6d4);
+}
+
+/* ========================= */
+/* FEED STACK */
+/* ========================= */
+
+.community-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ========================= */
+/* COMMUNITY CARD */
+/* ========================= */
+
+.community-row {
+  display: flex;
+  padding: 22px;
+  background: #0f1418;
+  border: 1px solid #23282d;
+  border-radius: 14px;
+  transition: all 0.18s ease;
+}
+
+.community-row:hover {
+  border-color: #2e343a;
+  background: #12171b;
+  transform: translateY(-2px);
+}
+
+/* ========================= */
+/* AVATAR */
+/* ========================= */
+
+.community-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #1b2025;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 18px;
+  flex-shrink: 0;
+}
+
+.community-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.community-avatar span {
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--accent, #06b6d4);
+}
+
+/* ========================= */
+/* CONTENT */
+/* ========================= */
+
+.community-main {
+  flex: 1;
+}
+
+.community-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #e6e6e6;
+  text-decoration: none;
+}
+
+.community-title:hover {
+  text-decoration: underline;
+}
+
+.community-meta {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #8b949e;
+  display: flex;
+  gap: 8px;
+}
+
+.community-description {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #c9d1d9;
+  line-height: 1.5;
+}
+
+/* ========================= */
+/* ACTIONS */
+/* ========================= */
+
+.community-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-left: 24px;
+}
+
+/* JOIN BUTTON */
+
+.btn-join {
+  background: transparent;
+  border: 1px solid var(--primary, #6366f1);
+  color: var(--primary, #6366f1);
+  padding: 7px 18px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-join:hover {
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.btn-join.joined {
+  background: var(--primary, #6366f1);
+  color: #fff;
+  border-color: var(--primary, #6366f1);
+}
+
+/* DELETE */
+
+.btn-delete {
+  background: transparent;
+  border: none;
+  color: #ff6b6b;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.btn-delete:hover {
+  text-decoration: underline;
+}
+
+/* ========================= */
+/* SIDEBAR CARD */
+/* ========================= */
+
+.sidebar-card {
+  background: #0f1418;
+  border: 1px solid #23282d;
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.sidebar-card h4 {
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent, #06b6d4);
+}
+
+/* POPULAR COMMUNITY */
+
+.popular-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.popular-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #1b2025;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #d4a017;
+}
+
+.popular-info a {
+  font-weight: 600;
+  color: #e6e6e6;
+  text-decoration: none;
+}
+
+.popular-info a:hover {
+  text-decoration: underline;
+}
+
+.popular-members {
+  font-size: 12px;
+  color: #8b949e;
+}
+
+/* ========================= */
+/* EMPTY STATE */
+/* ========================= */
+
+.empty-state {
+  padding: 40px;
+  text-align: center;
+  color: #8b949e;
+  border: 1px solid #23282d;
+  border-radius: 14px;
+}
+
+/* ================= TOP 3 RANKING ================= */
+
+.top-community-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #1f2428;
+}
+
+.top-community-row:last-child {
+  border-bottom: none;
+}
+
+/* Rank number */
+.rank-badge {
+  font-size: 12px;
+  font-weight: 600;
+  color: #d4a017;
+  width: 22px;
+}
+
+/* Avatar */
+.top-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #1b2025;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #d4a017;
+  overflow: hidden;
+}
+
+.top-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Info */
+.top-info a {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e6e6e6;
+  text-decoration: none;
+}
+
+.top-info a:hover {
+  text-decoration: underline;
+}
+
+.top-members {
+  font-size: 11px;
+  color: #8b949e;
+}
+
+/* ================= TOP 3 RANKING ================= */
+
+.top-community-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid #1f2428;
+  transition: all 0.15s ease;
+}
+
+.top-community-row:hover {
+  background: rgba(255,255,255,0.02);
+}
+
+.top-community-row:last-child {
+  border-bottom: none;
+}
+
+/* Rank number */
+.rank-badge {
+  width: 26px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #8b949e;
+}
+
+/* Crown for #1 */
+.crown {
+  font-size: 16px;
+  line-height: 1;
+  display: inline-block;
+  transform: translateY(1px);
+}
+
+/* Highlight first ranked community */
+.top-community-row:first-child {
+  background: rgba(212,160,23,0.05);
+  border-radius: 8px;
+  padding-left: 6px;
+}
+
+.top-community-row:first-child .rank-badge {
+  color: #d4a017;
+}
+
+/* Avatar */
+.top-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #1b2025;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #d4a017;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.top-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Info */
+.top-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.top-info a {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e6e6e6;
+  text-decoration: none;
+}
+
+.top-info a:hover {
+  text-decoration: underline;
+}
+
+.top-members {
+  font-size: 11px;
+  color: #8b949e;
+  margin-top: 2px;
+}

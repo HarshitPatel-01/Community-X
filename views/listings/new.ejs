@@ -1,42 +1,95 @@
 <%- include('../layouts/boilerplate') %>
-<link rel="stylesheet" href="/css/newpost.css">
-<div class="create-post-page">
+<link rel="stylesheet" href="/CSS/newpost.css">
 
+<div class="create-post-page">
   <div class="create-card">
 
     <!-- HEADER -->
     <div class="create-top">
-      <div class="avatar"><%= currentUser ? currentUser.charAt(0).toUpperCase() : "U" %></div>
+      <div class="avatar">
+        <%= currentUser ? currentUser.charAt(0).toUpperCase() : "U" %>
+      </div>
+
       <div class="title-area">
         <h2>Create a post</h2>
-        <span>Share something interesting with the community</span>
+        <span>Share something interesting with the world</span>
       </div>
     </div>
 
     <form action="/post/new" method="POST" enctype="multipart/form-data" class="post-form">
 
-      <!-- TITLE -->
-      <div class="input-group">
-        <input type="text" name="title" id="titleInput" placeholder="Title" maxlength="200" required>
-        <span class="char-count"><span id="charNum">0</span>/200</span>
-      </div>
-
-      <!-- TEXT -->
-      <textarea name="description" placeholder="Text (optional)"></textarea>
-
-      <!-- IMAGE PREVIEW BOX -->
-      <div class="image-box" id="imageBox">
-        <label class="image-btn">
-          📷 Add Image
-          <input type="file" name="image" id="imageInput" hidden>
+      <!-- ================= COMMUNITY SELECT ================= -->
+      <div class="community-select">
+        <label>
+          <i class="bi bi-people-fill"></i> Choose Community
         </label>
-        <img id="previewImage">
+
+        <select name="communityName" class="community-dropdown">
+          <option value="">Post Globally</option>
+
+          <% if (typeof communities !== "undefined" && communities.length > 0) { %>
+            <% communities.forEach(c => { %>
+              <option value="<%= c.name %>"
+                <%= (typeof selectedCommunity !== "undefined" && selectedCommunity && selectedCommunity.name === c.name) ? "selected" : "" %>>
+                c/<%= c.name %>
+              </option>
+            <% }) %>
+          <% } %>
+        </select>
       </div>
 
+      <!-- ================= TITLE ================= -->
+      <div class="input-group">
+        <input
+          type="text"
+          name="title"
+          id="titleInput"
+          placeholder="Title"
+          maxlength="200"
+          required
+        >
+        <span class="char-count">
+          <span id="charNum">0</span>/200
+        </span>
+      </div>
 
-      <!-- ACTION BAR -->
+      <!-- ================= DESCRIPTION ================= -->
+      <div class="input-group">
+        <textarea
+          name="description"
+          id="descriptionInput"
+          placeholder="Text (optional)"
+          maxlength="1000"
+        ></textarea>
+        <span class="char-count">
+          <span id="descCharNum">0</span>/1000
+        </span>
+      </div>
+
+      <!-- ================= IMAGE UPLOAD (Drag & Drop) ================= -->
+      <div class="image-box" id="imageBox">
+        <div id="uploadPrompt" class="upload-prompt">
+          <i class="bi bi-cloud-upload" style="font-size: 2rem; color: #666;"></i>
+          <p style="margin: 10px 0 5px; color: #ccc;">Drag & Drop or Click to Upload</p>
+          <label class="image-btn">
+            Choose Image
+            <input type="file" name="image" id="imageInput" accept="image/*" hidden>
+          </label>
+        </div>
+
+        <div id="previewContainer" style="display:none; position: relative;">
+          <img id="previewImage">
+          <button type="button" id="removeImage" class="remove-image-btn">
+            <i class="bi bi-x-circle-fill"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- ================= ACTION ================= -->
       <div class="post-actions">
-        <button type="submit" class="submit-btn">Post</button>
+        <button type="submit" class="submit-btn">
+          Post
+        </button>
       </div>
 
     </form>
@@ -44,23 +97,83 @@
 </div>
 
 <script>
-const input = document.getElementById("titleInput");
-const count = document.getElementById("charNum");
-input.addEventListener("input", () => count.textContent = input.value.length);
+  // ================= TITLE CHARACTER COUNTER =================
+  const titleInput = document.getElementById("titleInput");
+  const charCount = document.getElementById("charNum");
 
-document.getElementById("imageInput").addEventListener("change", e => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const img = document.getElementById("previewImage");
-    const box = document.getElementById("imageBox");
-    img.src = ev.target.result;
-    img.style.display = "block";
-    box.classList.add("has-image");
-  };
-  reader.readAsDataURL(file);
-});
+  titleInput.addEventListener("input", () => {
+    charCount.textContent = titleInput.value.length;
+  });
+
+  // ================= DESCRIPTION CHARACTER COUNTER =================
+  const descInput = document.getElementById("descriptionInput");
+  const descCharCount = document.getElementById("descCharNum");
+
+  descInput.addEventListener("input", () => {
+    descCharCount.textContent = descInput.value.length;
+  });
+
+  // ================= IMAGE UPLOAD & PREVIEW =================
+  const imageBox = document.getElementById("imageBox");
+  const imageInput = document.getElementById("imageInput");
+  const uploadPrompt = document.getElementById("uploadPrompt");
+  const previewContainer = document.getElementById("previewContainer");
+  const previewImage = document.getElementById("previewImage");
+  const removeBtn = document.getElementById("removeImage");
+
+  // File selection via input
+  imageInput.addEventListener("change", e => {
+    const file = e.target.files[0];
+    if (file) handleFile(file);
+  });
+
+  // Drag and drop
+  imageBox.addEventListener("dragover", e => {
+    e.preventDefault();
+    imageBox.style.borderColor = "#4f8cff";
+    imageBox.style.background = "#202327";
+  });
+
+  imageBox.addEventListener("dragleave", e => {
+    e.preventDefault();
+    imageBox.style.borderColor = "";
+    imageBox.style.background = "";
+  });
+
+  imageBox.addEventListener("drop", e => {
+    e.preventDefault();
+    imageBox.style.borderColor = "";
+    imageBox.style.background = "";
+
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith("image/")) {
+      // Set the file to the input element
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(file);
+      imageInput.files = dataTransfer.files;
+      handleFile(file);
+    }
+  });
+
+  // Remove image
+  removeBtn.addEventListener("click", () => {
+    imageInput.value = "";
+    uploadPrompt.style.display = "block";
+    previewContainer.style.display = "none";
+    imageBox.classList.remove("has-image");
+  });
+
+  // Handle file display
+  function handleFile(file) {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      previewImage.src = ev.target.result;
+      uploadPrompt.style.display = "none";
+      previewContainer.style.display = "block";
+      imageBox.classList.add("has-image");
+    };
+    reader.readAsDataURL(file);
+  }
 </script>
 
 <%- include('../layouts/footer') %>

@@ -1,0 +1,65 @@
+<%- include('../layouts/boilerplate') %>
+
+<div class="auth-wrapper">
+  <div class="auth-card">
+
+    <header class="auth-header">
+      <h2>Settings</h2>
+      <p>Manage your account preferences</p>
+    </header>
+
+    <!-- ACCOUNT INFO -->
+    <div style="margin-bottom: 1.5rem; padding: 16px; background: var(--bg-soft, #1c2230); border-radius: 10px;">
+      <div style="font-size: 13px; color: var(--text-muted, #8892a4); margin-bottom: 4px;">Username</div>
+      <div style="font-weight: 600;"><%= currentUser %></div>
+    </div>
+
+    <!-- CHANGE PASSWORD -->
+    <form action="/settings/password" method="POST" class="auth-form">
+
+      <div class="auth-input">
+        <i class="bi bi-lock"></i>
+        <input
+          type="password"
+          name="currentPassword"
+          placeholder="Current password"
+          required
+        >
+      </div>
+
+      <div class="auth-input">
+        <i class="bi bi-shield-lock"></i>
+        <input
+          type="password"
+          name="newPassword"
+          placeholder="New password"
+          required
+          minlength="6"
+        >
+      </div>
+
+      <div class="auth-input">
+        <i class="bi bi-shield-check"></i>
+        <input
+          type="password"
+          name="confirmPassword"
+          placeholder="Confirm new password"
+          required
+          minlength="6"
+        >
+      </div>
+
+      <button type="submit" class="auth-btn">Update Password</button>
+
+    </form>
+
+    <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border, #2a3040);">
+      <a href="/home" style="color: var(--text-muted); font-size: 14px;">
+        <i class="bi bi-arrow-left"></i> Back to Home
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<%- include('../layouts/footer') %>

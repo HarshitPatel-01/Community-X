@@ -1,0 +1,132 @@
+<%- include('../layouts/boilerplate') %>
+  <link rel="stylesheet" href="/css/community.css">
+
+  <div class="main-content">
+
+    <!-- Main Feed -->
+    <div class="community-main-area">
+
+      <!-- HEADER -->
+      <div class="community-header">
+        <div>
+          <h2>Communities</h2>
+          <p>Explore and join student-led communities.</p>
+        </div>
+
+        <div class="community-count">
+          <%= communities.length %> total
+        </div>
+      </div>
+
+      <!-- COMMUNITY LIST -->
+      <div class="community-feed">
+
+        <% if (communities.length===0) { %>
+          <div class="empty-state">
+            No communities yet. Be the first to create one.
+          </div>
+          <% } %>
+
+            <% communities.forEach(c=> { %>
+
+              <div class="community-row">
+
+                <!-- Avatar -->
+                <div class="community-avatar">
+                  <% if (c.image && c.image.trim() !=="" ) { %>
+                    <img src="<%= c.image %>" />
+                    <% } else { %>
+                      <span>
+                        <%= c.name.charAt(0).toUpperCase() %>
+                      </span>
+                      <% } %>
+                </div>
+
+                <!-- Content -->
+                <div class="community-main">
+                  <a href="/r/<%= c.name %>" class="community-title">
+                    r/<%= c.name %>
+                  </a>
+
+                  <div class="community-meta">
+                    <%= c.memberCount %> members &middot;
+                      Created <%= new Date(c.createdAt).toLocaleDateString() %>
+                  </div>
+
+                  <div class="community-description">
+                    <%= c.description || "No description yet." %>
+                  </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="community-actions">
+
+                  <% if (userId) { %>
+                    <form action="/community/<%= c._id %>/join" method="POST">
+                      <button class="btn-join <%= c.isMember ? 'joined' : '' %>">
+                        <%= c.isMember ? "Joined" : "Join" %>
+                      </button>
+                    </form>
+                    <% } %>
+
+                      <% if (userId && String(c.creator)===String(userId)) { %>
+                        <form action="/community/<%= c._id %>/delete" method="POST">
+                          <button class="btn-delete">Delete</button>
+                        </form>
+                        <% } %>
+
+                </div>
+
+              </div>
+
+              <% }) %>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDEBAR -->
+    <div class="community-sidebar">
+
+      <% if (topCommunities.length> 0) { %>
+
+        <div class="sidebar-card">
+          <h4>Top Communities</h4>
+
+          <% topCommunities.forEach((c, index)=> { %>
+
+            <div class="top-community-row">
+
+              <div class="rank-badge">
+                #<%= index + 1 %>
+              </div>
+
+              <div class="top-avatar">
+                <% if (c.image && c.image.trim() !=="" ) { %>
+                  <img src="<%= c.image %>" />
+                  <% } else { %>
+                    <span>
+                      <%= c.name.charAt(0).toUpperCase() %>
+                    </span>
+                    <% } %>
+              </div>
+
+              <div class="top-info">
+                <a href="/r/<%= c.name %>">
+                  r/<%= c.name %>
+                </a>
+                <div class="top-members">
+                  <%= c.memberCount %> members
+                </div>
+              </div>
+
+            </div>
+
+            <% }) %>
+
+        </div>
+
+        <% } %>
+
+    </div>
+  </div>

@@ -1,5 +1,30 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+  /* ================= SIDEBAR TOGGLE ================= */
+  const sidebarToggle = document.getElementById("sidebarToggle");
+  if (sidebarToggle) {
+    sidebarToggle.addEventListener("click", () => {
+      document.body.classList.toggle("sidebar-collapsed");
+      localStorage.setItem("sidebarCollapsed", document.body.classList.contains("sidebar-collapsed"));
+    });
+    if (localStorage.getItem("sidebarCollapsed") === "true") {
+      document.body.classList.add("sidebar-collapsed");
+    }
+  }
+
+  /* ================= PROFILE DROPDOWN ================= */
+  const profileMenu = document.getElementById("profileMenu");
+  if (profileMenu) {
+    const trigger = profileMenu.querySelector(".profile-trigger");
+    trigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      profileMenu.classList.toggle("open");
+    });
+    document.addEventListener("click", () => {
+      profileMenu.classList.remove("open");
+    });
+  }
+
   /* ================= VOTING ================= */
   async function vote(postId, type, postActions, btnClicked) {
     if (btnClicked.dataset.loading === "true") return; // prevent double request
@@ -66,8 +91,8 @@ function copyLink(id, el) {
   navigator.clipboard.writeText(url);
 
   const btn = el.closest(".share-btn");
-  btn.textContent = "Copied!";
-  setTimeout(() => btn.textContent = "🔗 Share", 1500);
+  btn.innerHTML = "Copied!";
+  setTimeout(() => btn.innerHTML = '<i class="bi bi-share"></i> Share', 1500);
 }
 
 
@@ -95,16 +120,19 @@ function showFlash(message, type = "error") {
 
 
 
-document.getElementById("imageInput").addEventListener("change", function(e) {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(event) {
-      const img = document.getElementById("previewImage");
-      img.src = event.target.result;
-      img.style.display = "block";
-    };
-    reader.readAsDataURL(file);
-  }
-});
+const imageInput = document.getElementById("imageInput");
+if (imageInput) {
+  imageInput.addEventListener("change", function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = document.getElementById("previewImage");
+        img.src = event.target.result;
+        img.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+}
 

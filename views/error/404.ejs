@@ -1,0 +1,42 @@
+<%- include('../layouts/boilerplate') %>
+<link rel="stylesheet" href="/CSS/404.css">
+
+<div class="error-wrapper">
+
+  <div class="error-icon">
+    🎓
+  </div>
+
+  <h1 class="error-code">404</h1>
+
+  <p class="error-message">
+    This page didn't submit its assignment.
+  </p>
+
+  <p class="error-quote" id="randomQuote"></p>
+
+  <div class="error-actions">
+    <a href="/community" class="btn-home">
+      Go Back to Communities
+    </a>
+  </div>
+
+</div>
+
+<script>
+  const quotes = [
+    "Even Google couldn’t help this time.",
+    "Looks like this page missed attendance.",
+    "This link pulled an all-nighter and vanished.",
+    "The page is on a semester break.",
+    "404 — Page not found, just like my motivation before exams.",
+    "This page transferred to another university.",
+    "Error 404: Knowledge not found.",
+    "Looks like this page failed the viva.",
+    "The server said: 'I'll do it tomorrow.'",
+    "This page rage-quit the group project."
+  ];
+
+  const random = quotes[Math.floor(Math.random() * quotes.length)];
+  document.getElementById("randomQuote").textContent = random;
+</script>

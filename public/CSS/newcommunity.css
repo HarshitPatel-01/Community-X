@@ -1,0 +1,160 @@
+/* Layout */
+
+.future-layout {
+  margin-left: 240px;
+  padding: 80px 60px 120px;
+  background: #0c0f13;
+}
+
+.future-main {
+  max-width: 720px;
+}
+
+/* Hero */
+
+.future-create-hero h1 {
+  font-size: 30px;
+  margin: 0;
+}
+
+.future-create-hero p {
+  margin-top: 8px;
+  font-size: 15px;
+  color: #8b949e;
+}
+
+/* Panel */
+
+.future-create-panel {
+  margin-top: 40px;
+  padding: 40px;
+  background: rgba(255,255,255,0.02);
+  backdrop-filter: blur(14px);
+  border-radius: 24px;
+}
+
+/* Avatar */
+
+.future-avatar-section {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.future-avatar-preview {
+  width: 88px;
+  height: 88px;
+  border-radius: 26px;
+  background: linear-gradient(145deg,#1a1f25,#12161a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 600;
+  color: #d4a017;
+  overflow: hidden;
+}
+
+.future-avatar-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 26px;
+}
+
+/* Upload */
+
+.future-upload label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.future-upload small {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #6e7681;
+}
+
+/* Fields */
+
+.future-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  margin-bottom: 30px;
+}
+
+.future-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.future-field label {
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #d1d5db;
+}
+
+.future-field input,
+.future-field textarea {
+  padding: 14px;
+  background: #12161a;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 14px;
+  color: #fff;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.future-field input:focus,
+.future-field textarea:focus {
+  border-color: #d4a017;
+  box-shadow: 0 0 0 2px rgba(212,160,23,0.15);
+  outline: none;
+}
+
+/* Prefix */
+
+.future-prefix {
+  display: flex;
+  align-items: center;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #12161a;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.future-prefix span {
+  padding: 14px;
+  background: #161b20;
+  color: #d4a017;
+  font-weight: 600;
+}
+
+.future-prefix input {
+  border: none;
+  background: transparent;
+}
+
+/* Action */
+
+.future-action {
+  margin-top: 40px;
+}
+
+.future-submit {
+  background: #d4a017;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 30px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.future-submit:hover {
+  transform: translateY(-2px);
+  background: #f1b500;
+}

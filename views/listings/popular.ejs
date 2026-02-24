@@ -1,0 +1,126 @@
+<%- include('../layouts/boilerplate') %>
+<link rel="stylesheet" href="/css/show.css">
+<link rel="stylesheet" href="/css/community.css">
+
+<div class="main-content">
+
+  <div class="main-card">
+
+    <!-- ================= POPULAR POSTS ================= -->
+    <div class="section-header" style="margin-bottom: 1.5rem;">
+      <h2 style="font-size: 1.75rem; font-weight: 700;">Popular Communities</h2>
+      <p style="color: #9ca3af; font-size: 0.9rem; margin-top: 0.5rem;">Top posts with the most upvotes</p>
+    </div>
+
+    <% if (posts.length === 0) { %>
+      <div class="empty-state">
+        <h3>No posts yet</h3>
+        <p>Be the first to create one!</p>
+      </div>
+    <% } %>
+
+    <% posts.forEach(post => { %>
+    <div class="card-outline post-hover">
+
+      <div class="post-click" onclick="location.href='/post/<%= post._id %>'">
+
+        <div class="post-header">
+          <% if (post.communityName) { %>
+            <span class="subreddit">r/<%= post.communityName %></span>
+            <span class="dot">•</span>
+          <% } %>
+          <span class="post-meta">
+            Posted by <%= post.authorName || "User" %>
+          </span>
+        </div>
+
+        <h5 class="post-title"><%= post.title %></h5>
+
+        <% if (post.text) { %>
+          <p class="post-text"><%= post.text.length > 200 ? post.text.substring(0,200) + "..." : post.text %></p>
+        <% } %>
+
+        <% if (post.image && post.image.url) { %>
+        <div class="post-media">
+          <img src="<%= post.image.url %>" alt="post image">
+        </div>
+        <% } %>
+
+      </div>
+
+      <div class="post-actions">
+        <button class="vote-btn upvote-btn" data-id="<%= post._id %>">
+          ⬆ <span class="up-count"><%= post.upvotes || 0 %></span>
+        </button>
+        <button class="vote-btn downvote-btn" data-id="<%= post._id %>">
+          ⬇ <span class="down-count"><%= post.downvotes || 0 %></span>
+        </button>
+        <a href="/post/<%= post._id %>" class="action-btn"><i class="bi bi-chat"></i> Comments</a>
+        <button class="action-btn share-btn" onclick="copyLink('<%= post._id %>', this)"><i class="bi bi-share"></i> Share</button>
+      </div>
+
+    </div>
+    <% }) %>
+
+    <!-- ================= POPULAR COMMUNITIES ================= -->
+    <div class="section-header" style="margin-top: 3rem;">
+      <h2 class="trending-title">👥 Popular Communities</h2>
+      <p class="section-subtitle">Top communities with the most members</p>
+    </div>
+
+    <% if (communities.length === 0) { %>
+      <div class="empty-state">
+        No communities yet. <a href="/community/new">Create one!</a>
+      </div>
+    <% } %>
+
+    <div class="community-feed">
+      <% communities.forEach(c => { %>
+
+        <div class="community-row">
+
+          <!-- Avatar -->
+          <div class="community-avatar">
+            <% if (c.image && c.image.trim() !== "") { %>
+              <img src="<%= c.image %>" />
+            <% } else { %>
+              <span>
+                <%= c.name.charAt(0).toUpperCase() %>
+              </span>
+            <% } %>
+          </div>
+
+          <!-- Content -->
+          <div class="community-main">
+            <a href="/r/<%= c.name %>" class="community-title">
+              r/<%= c.name %>
+            </a>
+
+            <div class="community-meta">
+              👥 <%= c.memberCount %> members •
+              Created <%= new Date(c.createdAt).toLocaleDateString() %>
+            </div>
+
+            <div class="community-description">
+              <%= c.description || "No description yet." %>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="community-actions">
+            <a href="/r/<%= c.name %>" class="btn-join">
+              View
+            </a>
+          </div>
+
+        </div>
+
+      <% }) %>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="/js/script.js"></script>
+<%- include('../layouts/footer') %>

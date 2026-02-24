@@ -1,36 +1,32 @@
 <%- include('../layouts/boilerplate') %>
 <link rel="stylesheet" href="/css/show.css">
+<link rel="stylesheet" href="/css/community.css">
 
 <div class="main-content">
 
-    <!-- 🔥 TRENDING STRIP -->
-    <div class="trending-wrapper">
-        <div class="top-items">
-            <% trendingPosts.forEach(post => { %>
-                <a href="/post/<%= post._id %>" class="post-card">
-                    <div class="trending-card">
-                        <h5><%= post.title %></h5>
-                        <p><%= post.description ? post.description.substring(0,60)+"..." : "No description" %></p>
-                    </div>
-                </a>
-            <% }) %>
-        </div>
-    </div>
-
-    <hr>
-
-    <!-- 📰 MAIN FEED -->
+    <!-- MAIN FEED -->
     <div class="main-card">
 
-        <% posts.forEach(post => { %>   <!-- ✅ LOOP START -->
+        <% if (posts.length === 0) { %>
+          <div class="empty-state">
+            <h3>No posts yet</h3>
+            <p>Be the first to create a post!</p>
+          </div>
+        <% } %>
+
+        <% posts.forEach(post => { %>
 
         <div class="card-outline post-hover">
 
             <div class="post-click" onclick="location.href='/post/<%= post._id %>'">
 
                 <div class="post-header">
-                    <span class="subreddit">r/community</span>
-                    <span class="dot">•</span>
+                    <% if (post.community) { %>
+                      <span class="subreddit">c/<%= post.community.name %></span>
+                    <% } else { %>
+                      <span class="subreddit">c/general</span>
+                    <% } %>
+                    <span class="dot">&#183;</span>
                     <span class="post-meta">
                         Posted by <%= post.author ? post.author.username : "Unknown" %>
                     </span>
@@ -38,13 +34,13 @@
 
                 <h5 class="post-title"><%= post.title %></h5>
 
-                <% if (post.description) { %>
-                  <p class="post-text"><%= post.description %></p>
+                <% if (post.text) { %>
+                  <p class="post-text"><%= post.text.length > 200 ? post.text.substring(0,200) + "..." : post.text %></p>
                 <% } %>
 
                 <% if (post.image) { %>
                 <div class="post-media">
-                    <img src="/uploads/<%= post.image %>" alt="post image">
+                    <img src="<%= post.image.url %>" alt="post image">
                 </div>
                 <% } %>
 
@@ -52,22 +48,46 @@
 
             <div class="post-actions">
                 <button class="vote-btn upvote-btn" data-id="<%= post._id %>">
-                    ⬆ <span class="up-count"><%= post.upvotes || 0 %></span>
+                    <i class="bi bi-arrow-up"></i> <span class="up-count"><%= post.upvotes || 0 %></span>
                 </button>
-
                 <button class="vote-btn downvote-btn" data-id="<%= post._id %>">
-                    ⬇ <span class="down-count"><%= post.downvotes || 0 %></span>
+                    <i class="bi bi-arrow-down"></i> <span class="down-count"><%= post.downvotes || 0 %></span>
                 </button>
-
-                <a href="/post/<%= post._id %>" class="action-btn">💬 Comments</a>
-                <button class="action-btn" onclick="copyLink('<%= post._id %>')">🔗 Share</button>
+                <a href="/post/<%= post._id %>" class="action-btn"><i class="bi bi-chat"></i> Comments</a>
+                <button class="action-btn share-btn" onclick="copyLink('<%= post._id %>', this)"><i class="bi bi-share"></i> Share</button>
             </div>
 
         </div>
 
-        <% }) %>   <!-- ✅ LOOP END -->
+        <% }) %>
 
     </div>
+
+    <!-- RIGHT SIDEBAR -->
+    <% if (typeof topCommunities !== 'undefined' && topCommunities.length > 0) { %>
+    <div class="community-sidebar">
+      <div class="sidebar-card">
+        <h4>Top Communities</h4>
+        <% topCommunities.forEach((c, index) => { %>
+        <div class="top-community-row">
+          <div class="rank-badge">#<%= index + 1 %></div>
+          <div class="top-avatar">
+            <% if (c.image && c.image.trim() !== "") { %>
+              <img src="<%= c.image %>" />
+            <% } else { %>
+              <span><%= c.name.charAt(0).toUpperCase() %></span>
+            <% } %>
+          </div>
+          <div class="top-info">
+            <a href="/r/<%= c.name %>">c/<%= c.name %></a>
+            <div class="top-members"><%= c.memberCount %> members</div>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+    <% } %>
+
 </div>
 
 <script src="/js/script.js"></script>

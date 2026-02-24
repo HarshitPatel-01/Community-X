@@ -1,93 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community X</title>
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
-      <!-- AUTH STYLES -->
     <link rel="stylesheet" href="/css/auth.css">
-
-    <!--Trending Pages-->
-    <link rel="stylesheet" href="/css/trending.css">
-    
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/style.css">
-    
 </head>
 
 <body>
 
-<!-- ===== NAVBAR ===== -->
-<nav class="navbar navbar-expand-lg shadow-sm fixed-top">
-    <div class="container-fluid position-relative">
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <button class="sidebar-toggle" id="sidebarToggle" type="button">
+                <i class="bi bi-list"></i>
+            </button>
+            <a class="navbar-brand" href="/home">Community X</a>
+        </div>
 
-        <!-- Logo -->
-        <a class="navbar-brand fw-bold fs-4" href="/home">Community X</a>
-
-        <!-- Search -->
-        <form class="search-form mx-auto">
-            <input class="form-control" type="search" placeholder="Search communities...">
+        <form class="search-form" action="/search" method="GET">
+            <input type="search" name="q" placeholder="Search posts and communities..." value="<%= typeof query !== 'undefined' ? query : '' %>">
         </form>
 
-        <!-- Right Side -->
-        <div class="d-flex align-items-center gap-3">
-
+        <div class="nav-right">
             <% if (currentUser) { %>
-
-                <!-- 🔥 CREATE POST BUTTON -->
-                
-             
                 <a href="/post/new" class="create-post-btn">
-                    <i class="bi bi-plus-circle"></i> Post
+                    <i class="bi bi-plus-lg"></i> <span>Create</span>
                 </a>
 
-                <span class="nav-link text-light">
-                    Hello, <strong><%= currentUser.username %></strong>
-                </span>
+                <div class="profile-menu" id="profileMenu">
+                    <button class="profile-trigger" type="button">
+                        <div class="profile-avatar"><%= currentUser.charAt(0).toUpperCase() %></div>
+                        <span class="profile-name"><%= currentUser %></span>
+                        <i class="bi bi-chevron-down" style="font-size:12px;color:var(--text-muted)"></i>
+                    </button>
 
-                <a class="nav-link" href="/logout">Logout</a>
-
+                    <div class="profile-dropdown">
+                        <a href="/settings" class="dropdown-item">
+                            <i class="bi bi-gear"></i> Settings
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/logout" class="dropdown-item danger">
+                            <i class="bi bi-box-arrow-right"></i> Log Out
+                        </a>
+                    </div>
+                </div>
             <% } else { %>
-
-                <a class="nav-link" href="/login">Log in</a>
-                <a class="nav-link" href="/signup">Sign up</a>
-
+                <a href="/login" class="nav-btn">Log In</a>
+                <a href="/signup" class="nav-btn nav-btn-primary">Sign Up</a>
             <% } %>
+        </div>
+    </nav>
 
+    <%- include('../includes/flash') %>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-label">Main</div>
+            <a class="nav-link" href="/home">
+                <i class="bi bi-house"></i> <span class="link-text">Home</span>
+            </a>
+            <a class="nav-link" href="/popular">
+                <i class="bi bi-arrow-up-right-circle"></i> <span class="link-text">Popular</span>
+            </a>
+            <a class="nav-link" href="/trending">
+                <i class="bi bi-graph-up-arrow"></i> <span class="link-text">Trending</span>
+            </a>
+        </div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-label">Communities</div>
+            <a class="nav-link" href="/explore">
+                <i class="bi bi-compass"></i> <span class="link-text">Explore</span>
+            </a>
+            <a class="nav-link" href="/community">
+                <i class="bi bi-people"></i> <span class="link-text">All Communities</span>
+            </a>
+            <a href="/community/new" class="sidebar-create-btn">
+                <i class="bi bi-plus-square"></i> <span class="link-text">Create Community</span>
+            </a>
         </div>
     </div>
-</nav>
-
-<!-- FLASH MESSAGES -->
-<%- include('../includes/flash') %>
-
-<!-- ===== SIDEBAR ===== -->
-<div id="sidebar" class="sidebar">
-    <ul class="nav flex-column">
-        <li class="nav-item">
-            <a class="nav-link" href="/home">
-                <i class="bi bi-house"></i> Home
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">
-                <i class="bi bi-arrow-up-right-circle"></i> Popular
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">
-                <i class="bi bi-compass"></i> Explore
-            </a>
-        </li>
-    </ul>
-</div>

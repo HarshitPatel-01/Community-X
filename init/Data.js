@@ -3,7 +3,10 @@ const Post = require("../models/post");
 const User = require("../models/user");
 const { data } = require("./samplePosts"); 
 
-mongoose.connect("mongodb://127.0.0.1:27017/CommunityX");
+mongoose.connect("mongodb://127.0.0.1:27017/communityx", {
+  dbName: "communityx"
+});
+
 
 const seedDB = async () => {
   await Post.deleteMany({});

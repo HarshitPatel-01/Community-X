@@ -1,24 +1,23 @@
 const Post = require("../models/post");
 const Comment = require("../models/comment");
-
+const checkToxicity = require("../utils/toxic");
 
 /* ================= HOME PAGE ================= */
 exports.getHome = async (req, res) => {
   try {
     const posts = await Post.find({ author: { $exists: true } })
       .populate("author", "username")
+      .populate("community", "name")
       .sort({ createdAt: -1 })
       .limit(20);
 
-    const trendingPosts = await Post.aggregate([
-      { $addFields: { score: { $subtract: ["$upvotes", "$downvotes"] } } },
-      { $sort: { score: -1, createdAt: -1 } },
-      { $limit: 4 }
-    ]);
+    const topCommunities = await Community.find({})
+      .sort({ memberCount: -1 })
+      .limit(5);
 
     res.render("listings/view", {
       posts,
-      trendingPosts,
+      topCommunities,
       currentUser: req.session.userId
     });
 
@@ -34,7 +33,30 @@ exports.getTrending = async (req, res) => {
   try {
     const posts = await Post.aggregate([
       { $addFields: { score: { $subtract: ["$upvotes", "$downvotes"] } } },
-      { $sort: { score: -1, createdAt: -1 } }
+      { $sort: { score: -1, createdAt: -1 } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "authorDoc"
+        }
+      },
+      {
+        $lookup: {
+          from: "communities",
+          localField: "community",
+          foreignField: "_id",
+          as: "communityDoc"
+        }
+      },
+      {
+        $addFields: {
+          authorName: { $arrayElemAt: ["$authorDoc.username", 0] },
+          communityName: { $arrayElemAt: ["$communityDoc.name", 0] }
+        }
+      },
+      { $project: { authorDoc: 0, communityDoc: 0 } }
     ]);
 
     res.render("listings/trending", { posts, currentUser: req.session.userId });
@@ -42,6 +64,85 @@ exports.getTrending = async (req, res) => {
   } catch (err) {
     console.log("TRENDING ERROR:", err);
     res.status(500).send("Error loading trending");
+  }
+};
+
+
+/* ================= POPULAR PAGE ================= */
+exports.getPopular = async (req, res) => {
+  try {
+    // Get top posts by score (upvotes - downvotes)
+    const popularPosts = await Post.aggregate([
+      { $addFields: { score: { $subtract: ["$upvotes", "$downvotes"] } } },
+      { $sort: { score: -1, createdAt: -1 } },
+      { $limit: 20 },
+      {
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "authorDoc"
+        }
+      },
+      {
+        $lookup: {
+          from: "communities",
+          localField: "community",
+          foreignField: "_id",
+          as: "communityDoc"
+        }
+      },
+      {
+        $addFields: {
+          authorName: { $arrayElemAt: ["$authorDoc.username", 0] },
+          communityName: { $arrayElemAt: ["$communityDoc.name", 0] }
+        }
+      },
+      { $project: { authorDoc: 0, communityDoc: 0 } }
+    ]);
+
+    // Get top communities by member count
+    const Community = require("../models/community");
+    const popularCommunities = await Community.find({})
+      .sort({ memberCount: -1, createdAt: -1 })
+      .limit(10);
+
+    res.render("listings/popular", {
+      posts: popularPosts,
+      communities: popularCommunities,
+      currentUser: req.session.userId
+    });
+
+  } catch (err) {
+    console.log("POPULAR ERROR:", err);
+    res.status(500).send("Error loading popular");
+  }
+};
+
+
+/* ================= EXPLORE PAGE ================= */
+exports.getExplore = async (req, res) => {
+  try {
+    const posts = await Post.find({ author: { $exists: true } })
+      .populate("author", "username")
+      .populate("community", "name")
+      .sort({ createdAt: -1 })
+      .limit(30);
+
+    const Community = require("../models/community");
+    const topCommunities = await Community.find({})
+      .sort({ memberCount: -1 })
+      .limit(5);
+
+    res.render("listings/explore", {
+      posts,
+      topCommunities,
+      currentUser: req.session.userId
+    });
+
+  } catch (err) {
+    console.log("EXPLORE ERROR:", err);
+    res.status(500).send("Error loading explore");
   }
 };
 
@@ -76,37 +177,67 @@ exports.getPost = async (req, res) => {
 
 
 /* ================= CREATE POST ================= */
+const Community = require("../models/community");
+
 exports.createPost = async (req, res) => {
   try {
     if (!req.session.userId) return res.redirect("/login");
 
-    console.log("BODY:", req.body);
-    console.log("FILE:", req.file);
+    const { title, description, communityName } = req.body;
 
-    const title = req.body?.title?.trim();
-    const description = req.body?.description?.trim();
+    if (!title) return res.status(400).send("Title required");
 
-    if (!title) return res.status(400).send("Title is required");
+    let communityId = null;
+    let redirectUrl = "/home";
+
+    // 🔹 If community selected (Hybrid Mode)
+    if (communityName && communityName.trim() !== "") {
+      const community = await Community.findOne({
+        name: communityName.toLowerCase()
+      });
+
+      if (community) {
+        communityId = community._id;
+        redirectUrl = `/r/${community.name}`;
+      }
+    }
+
+    // 🔥 TOXICITY CHECK
+    const textToCheck = `${title} ${description || ""}`;
+    const toxicityScore = await checkToxicity(textToCheck);
+
+    console.log("Toxicity Score:", toxicityScore);
+
+    if (toxicityScore > 0.75) {
+      req.flash("error", "⚠️ Your post was flagged as toxic. Please revise and try again.");
+      return res.redirect("back");
+    }
 
     const newPost = new Post({
-      title,
-      description: description || "",
+      title: title.trim(),
+      text: description?.trim() || "",
       author: req.session.userId,
-      image: req.file ? req.file.filename : null, // 🔥 from multer
+      community: communityId,   // 🔥 optional now
+      image: req.file
+        ? {
+            filename: req.file.filename,
+            url: `/uploads/${req.file.filename}`
+          }
+        : null,
       upvotes: 0,
       downvotes: 0,
       votesBy: []
     });
 
     await newPost.save();
-    res.redirect("/home");
+
+    res.redirect(redirectUrl);
 
   } catch (err) {
     console.log("CREATE POST ERROR:", err);
     res.status(500).send("Error creating post");
   }
 };
-
 
 /* ================= VOTING LOGIC ================= */
 const handleVote = async (req, res, voteType) => {

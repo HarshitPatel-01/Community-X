@@ -1,81 +1,83 @@
-
 /* =====================================================
-   📦 POST CARDS
+   POST CARDS
 ===================================================== */
-.main-card { width: 100%; max-width: 760px; }
+.main-card { width: 100%; max-width: 680px; }
 
 .card-outline {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 20px;
-  transition: 0.25s ease;
-  box-shadow: var(--shadow-soft);
-  margin-bottom: 20px;
+  border-radius: 10px;
+  padding: 18px;
+  transition: 0.2s ease;
+  margin-bottom: 16px;
+  cursor: default;
 }
 
 .card-outline:hover {
   background: var(--bg-soft);
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-hover);
+  border-color: #3a4050;
 }
 
-.card-title { font-size: 18px; font-weight: 600; }
-.card-text { color: var(--text-muted); font-size: 14px; }
-.post-header { font-size: 13px; color: var(--text-muted); }
+.post-title { font-size: 16px; font-weight: 600; margin: 6px 0; }
+.post-text { color: var(--text-muted); font-size: 14px; line-height: 1.5; margin-top: 4px; }
+.post-header { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
+.subreddit { font-weight: 600; color: var(--accent); }
+.dot { margin: 0 4px; color: var(--text-muted); }
+.post-click { cursor: pointer; }
 
 /* =====================================================
-   🎞 MEDIA
+   MEDIA
 ===================================================== */
 .post-media img,
 .post-media video {
   width: 100%;
-  border-radius: 10px;
-  margin-top: 12px;
+  border-radius: 8px;
+  margin-top: 10px;
 }
 
 /* =====================================================
-   🔘 ACTION BUTTONS
+   ACTION BUTTONS
 ===================================================== */
 .post-actions {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   border-top: 1px solid var(--border);
-  margin-top: 14px;
-  padding-top: 12px;
+  margin-top: 12px;
+  padding-top: 10px;
 }
 
 .action-btn,
 .upvote-btn,
 .downvote-btn {
-  background: var(--bg-soft);
+  background: transparent;
   border: 1px solid var(--border);
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 14px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 13px;
   color: var(--text-muted);
   display: flex;
   align-items: center;
-  gap: 6px;
-  transition: 0.2s;
+  gap: 5px;
+  transition: 0.15s;
+  cursor: pointer;
+  font-family: inherit;
 }
 
 .action-btn:hover,
 .upvote-btn:hover,
 .downvote-btn:hover {
-  background: #2a2f34;
-  color: #fff;
-  transform: translateY(-2px);
+  background: var(--bg-soft);
+  color: var(--text-main);
 }
 
 .upvote-btn.active {
-  color: #ff4500;
-  border-color: #ff4500;
-  background: rgba(255,69,0,0.12);
+  color: var(--primary);
+  border-color: var(--primary);
+  background: rgba(99,102,241,0.1);
 }
 
 .downvote-btn.active {
-  color: #4ea3ff;
-  border-color: #4ea3ff;
-  background: rgba(78,163,255,0.12);
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(6,182,212,0.1);
 }
