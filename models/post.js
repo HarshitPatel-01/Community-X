@@ -45,6 +45,12 @@ const postSchema = new Schema(
       }
     ],
 
+    /* ================= VISIBILITY ================= */
+    isPublic: {
+      type: Boolean,
+      default: false
+    },
+
     /* ================= VOTING ================= */
     upvotes: {
       type: Number,

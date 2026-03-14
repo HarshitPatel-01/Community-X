@@ -20,22 +20,21 @@
 
       <!-- ================= COMMUNITY SELECT ================= -->
       <div class="community-select">
-        <label>
-          <i class="bi bi-people-fill"></i> Choose Community
-        </label>
-
-        <select name="communityName" class="community-dropdown">
-          <option value="">Post Globally</option>
-
-          <% if (typeof communities !== "undefined" && communities.length > 0) { %>
-            <% communities.forEach(c => { %>
-              <option value="<%= c.name %>"
-                <%= (typeof selectedCommunity !== "undefined" && selectedCommunity && selectedCommunity.name === c.name) ? "selected" : "" %>>
-                c/<%= c.name %>
-              </option>
-            <% }) %>
-          <% } %>
-        </select>
+        <% if (typeof selectedCommunity !== "undefined" && selectedCommunity) { %>
+          <label>
+            <i class="bi bi-people-fill"></i> Posting to c/<%= selectedCommunity.name %>
+          </label>
+          <input type="hidden" name="communityName" value="<%= selectedCommunity.name %>">
+          
+          <div class="visibility-toggle">
+            <label class="switch-container">
+              <input type="checkbox" id="isPublic" name="isPublic" value="true">
+              <span class="slider"></span>
+            </label>
+            <label for="isPublic" class="visibility-label">Make this post public?</label>
+          </div>
+        <% } else { %>
+        <% } %>
       </div>
 
       <!-- ================= TITLE ================= -->

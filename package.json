@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "@tensorflow-models/toxicity": "^1.2.2",
+    "@tensorflow/tfjs": "^4.22.0",
     "axios": "^1.13.5",
     "bcrypt": "^6.0.0",
     "connect-flash": "^0.1.1",
@@ -12,7 +14,10 @@
     "method-override": "^3.0.0",
     "mongoose": "^9.1.5",
     "multer": "^2.0.2",
-    "nodemon": "^3.1.11",
+    "openai": "^6.25.0",
     "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }

@@ -53,7 +53,7 @@
   position: relative;
 }
 
-.auth-input i {
+.auth-input > i {
   position: absolute;
   top: 50%;
   left: 14px;

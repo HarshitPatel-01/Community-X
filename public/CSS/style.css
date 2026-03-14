@@ -372,26 +372,69 @@ body.sidebar-collapsed .main-content {
 ===================================================== */
 .flash-container {
   position: fixed;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 80px;
+  right: 20px;
   z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .custom-flash {
-  padding: 12px 18px;
-  border-radius: 8px;
-  margin-bottom: 8px;
-  box-shadow: var(--shadow-hover);
+  position: relative;
+  min-width: 300px;
+  max-width: 400px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 14px;
+  gap: 14px;
+  font-size: 15px;
+  font-weight: 500;
   color: #fff;
+  overflow: hidden;
+  animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-.custom-flash.success { background: rgba(16,185,129,0.9); }
-.custom-flash.error { background: rgba(239,68,68,0.9); }
+@keyframes slideInRight {
+  0% { transform: translateX(120%); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+.custom-flash.success {
+  background: var(--bg-card);
+  border-left: 4px solid var(--success);
+}
+.custom-flash.success i { color: var(--success); font-size: 20px; }
+
+.custom-flash.error {
+  background: var(--bg-card);
+  border-left: 4px solid var(--danger);
+}
+.custom-flash.error i { color: var(--danger); font-size: 20px; }
+
+.custom-flash span {
+  flex-grow: 1;
+}
+
+.custom-flash .progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.3);
+  width: 100%;
+  animation: progress 4s linear forwards;
+}
+
+.custom-flash.success .progress-bar { background: var(--success); }
+.custom-flash.error .progress-bar { background: var(--danger); }
+
+@keyframes progress {
+  0% { width: 100%; }
+  100% { width: 0%; }
+}
 
 /* =====================================================
   RESPONSIVE

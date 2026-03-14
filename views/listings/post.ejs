@@ -59,7 +59,7 @@
           <i class="bi bi-share"></i> Share
         </button>
 
-        <!-- ✅ DELETE (OWNER ONLY) -->
+        <!--  DELETE (OWNER ONLY) -->
         <% if (currentUser && post.author && String(post.author._id) === String(currentUser)) { %>
           <form
             action="/post/<%= post._id %>/delete"

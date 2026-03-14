@@ -38,7 +38,7 @@
                   <p class="post-text"><%= post.text.length > 200 ? post.text.substring(0,200) + "..." : post.text %></p>
                 <% } %>
 
-                <% if (post.image) { %>
+                <% if (post.image && post.image.url) { %>
                 <div class="post-media">
                     <img src="<%= post.image.url %>" alt="post image">
                 </div>
@@ -55,6 +55,14 @@
                 </button>
                 <a href="/post/<%= post._id %>" class="action-btn"><i class="bi bi-chat"></i> Comments</a>
                 <button class="action-btn share-btn" onclick="copyLink('<%= post._id %>', this)"><i class="bi bi-share"></i> Share</button>
+                
+                <% if (currentUser && post.author && (String(post.author._id) === String(currentUser) || String(post.author) === String(currentUser))) { %>
+                  <form action="/post/<%= post._id %>/delete" method="POST" style="margin: 0;" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                    <button type="submit" class="action-btn" style="color: var(--danger); outline: none; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                      <i class="bi bi-trash"></i> Delete
+                    </button>
+                  </form>
+                <% } %>
             </div>
 
         </div>

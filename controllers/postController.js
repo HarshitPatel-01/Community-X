@@ -1,11 +1,25 @@
 const Post = require("../models/post");
 const Comment = require("../models/comment");
-const checkToxicity = require("../utils/toxic");
+const moderateText = require("../utils/moderate");
 
 /* ================= HOME PAGE ================= */
 exports.getHome = async (req, res) => {
   try {
-    const posts = await Post.find({ author: { $exists: true } })
+    let userCommunities = [];
+    if (req.session.userId) {
+      // Since community model has members array but User might not have communities array, let's fetch communities where user is a member.
+      const joinedComms = await require("../models/community").find({ members: req.session.userId }).select("_id");
+      userCommunities = joinedComms.map(c => c._id);
+    }
+
+    const posts = await Post.find({
+      author: { $exists: true },
+      $or: [
+        { community: null },
+        { isPublic: true },
+        { community: { $in: userCommunities } }
+      ]
+    })
       .populate("author", "username")
       .populate("community", "name")
       .sort({ createdAt: -1 })
@@ -31,7 +45,22 @@ exports.getHome = async (req, res) => {
 /* ================= TRENDING PAGE ================= */
 exports.getTrending = async (req, res) => {
   try {
+    let userCommunities = [];
+    if (req.session.userId) {
+      const joinedComms = await require("../models/community").find({ members: req.session.userId }).select("_id");
+      userCommunities = joinedComms.map(c => c._id);
+    }
+
     const posts = await Post.aggregate([
+      {
+        $match: {
+          $or: [
+            { community: null },
+            { isPublic: true },
+            { community: { $in: userCommunities } }
+          ]
+        }
+      },
       { $addFields: { score: { $subtract: ["$upvotes", "$downvotes"] } } },
       { $sort: { score: -1, createdAt: -1 } },
       {
@@ -71,8 +100,23 @@ exports.getTrending = async (req, res) => {
 /* ================= POPULAR PAGE ================= */
 exports.getPopular = async (req, res) => {
   try {
+    let userCommunities = [];
+    if (req.session.userId) {
+      const joinedComms = await require("../models/community").find({ members: req.session.userId }).select("_id");
+      userCommunities = joinedComms.map(c => c._id);
+    }
+
     // Get top posts by score (upvotes - downvotes)
     const popularPosts = await Post.aggregate([
+      {
+        $match: {
+          $or: [
+            { community: null },
+            { isPublic: true },
+            { community: { $in: userCommunities } }
+          ]
+        }
+      },
       { $addFields: { score: { $subtract: ["$upvotes", "$downvotes"] } } },
       { $sort: { score: -1, createdAt: -1 } },
       { $limit: 20 },
@@ -123,7 +167,20 @@ exports.getPopular = async (req, res) => {
 /* ================= EXPLORE PAGE ================= */
 exports.getExplore = async (req, res) => {
   try {
-    const posts = await Post.find({ author: { $exists: true } })
+    let userCommunities = [];
+    if (req.session.userId) {
+      const joinedComms = await require("../models/community").find({ members: req.session.userId }).select("_id");
+      userCommunities = joinedComms.map(c => c._id);
+    }
+
+    const posts = await Post.find({
+      author: { $exists: true },
+      $or: [
+        { community: null },
+        { isPublic: true },
+        { community: { $in: userCommunities } }
+      ]
+    })
       .populate("author", "username")
       .populate("community", "name")
       .sort({ createdAt: -1 })
@@ -183,12 +240,13 @@ exports.createPost = async (req, res) => {
   try {
     if (!req.session.userId) return res.redirect("/login");
 
-    const { title, description, communityName } = req.body;
+    const { title, description, communityName, isPublic } = req.body;
 
     if (!title) return res.status(400).send("Title required");
 
     let communityId = null;
     let redirectUrl = "/home";
+    let isPublicFlag = false;
 
     // 🔹 If community selected (Hybrid Mode)
     if (communityName && communityName.trim() !== "") {
@@ -197,27 +255,39 @@ exports.createPost = async (req, res) => {
       });
 
       if (community) {
+        // Ensure user is member
+        const isMember = community.members.some(
+          id => String(id) === String(req.session.userId)
+        );
+        if (!isMember) {
+          req.flash("error", "You must join the community to post in it.");
+          return res.redirect(`/r/${community.name}`);
+        }
+
         communityId = community._id;
         redirectUrl = `/r/${community.name}`;
+        isPublicFlag = isPublic === "true" || isPublic === true;
       }
     }
 
-    // 🔥 TOXICITY CHECK
-    const textToCheck = `${title} ${description || ""}`;
-    const toxicityScore = await checkToxicity(textToCheck);
+    // TOXICITY CHECK
+  const textToCheck = `${title} ${description || ""}`;
 
-    console.log("Toxicity Score:", toxicityScore);
+  const toxicityResult = await moderateText(textToCheck);
 
-    if (toxicityScore > 0.75) {
-      req.flash("error", "⚠️ Your post was flagged as toxic. Please revise and try again.");
-      return res.redirect("back");
-    }
+  console.log("Toxic detected:", toxicityResult);
+
+  if (toxicityResult.flagged) {
+    req.flash("error", "⚠️ Your post contains toxic language. Please revise it.");
+    return res.redirect(req.get("referer") || "/home");
+  }
 
     const newPost = new Post({
       title: title.trim(),
       text: description?.trim() || "",
       author: req.session.userId,
-      community: communityId,   // 🔥 optional now
+      community: communityId,   
+      isPublic: isPublicFlag,
       image: req.file
         ? {
             filename: req.file.filename,

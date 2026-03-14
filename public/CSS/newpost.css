@@ -95,6 +95,72 @@ html, body {
   margin-right: 4px;
 }
 
+/* =========================================
+   VISIBILITY TOGGLE (PUBLIC SWITCH)
+========================================= */
+.visibility-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.visibility-label {
+  margin: 0 !important;
+  font-weight: 500 !important;
+  font-size: 0.95rem !important;
+  color: #ccc;
+  cursor: pointer;
+}
+
+.switch-container {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.switch-container input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #2f3338;
+  transition: .3s;
+  border-radius: 34px;
+  border: 1px solid #4a4d52;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: #ccc;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+.switch-container input:checked + .slider {
+  background-color: var(--primary, #6366f1);
+  border-color: var(--primary, #6366f1);
+}
+
+.switch-container input:checked + .slider:before {
+  transform: translateX(20px);
+  background-color: white;
+}
+
 .community-dropdown {
   width: 100%;
   background: #232527;

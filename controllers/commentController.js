@@ -1,6 +1,6 @@
 const Post = require("../models/post");
 const Comment = require("../models/comment");
-const checkToxicity = require("../utils/toxic");
+const moderateText = require("../utils/moderate");
 
 exports.createComment = async (req, res) => {
   try {
@@ -11,8 +11,8 @@ exports.createComment = async (req, res) => {
     if (!post) return res.status(404).send("Post not found");
 
     // 🔥 TOXICITY CHECK
-    const toxicityScore = await checkToxicity(req.body.text);
-    if (toxicityScore > 0.75) {
+    const toxicityResult = await moderateText(req.body.text);
+    if (toxicityResult.flagged) {
       req.flash("error", "⚠️ Your comment was flagged as toxic. Please revise and try again.");
       return res.redirect(`/post/${post._id}`);
     }

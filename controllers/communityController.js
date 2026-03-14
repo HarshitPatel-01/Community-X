@@ -1,6 +1,6 @@
 const Community = require("../models/community");
 const Post = require("../models/post");
-const checkToxicity = require("../utils/toxic");
+const moderateText = require("../utils/moderate");
 
 /* ================= CREATE COMMUNITY ================= */
 exports.createCommunity = async (req, res) => {
@@ -30,8 +30,8 @@ exports.createCommunity = async (req, res) => {
 
     // Toxicity check
     const textToCheck = `${name} ${title} ${description}`;
-    const toxicityScore = await checkToxicity(textToCheck);
-    if (toxicityScore > 0.75) {
+    const toxicityResult = await moderateText(textToCheck);
+    if (toxicityResult.flagged) {
       req.flash("error", "Community content was flagged as inappropriate. Please revise.");
       return res.redirect("/community/new");
     }
