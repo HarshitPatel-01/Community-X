@@ -8,14 +8,6 @@
   ],
   "routes": [
     {
-      "src": "/css/(.*)",
-      "dest": "/public/CSS/$1"
-    },
-    {
-      "src": "/js/(.*)",
-      "dest": "/public/JS/$1"
-    },
-    {
       "src": "/(.*)",
       "dest": "/server.js"
     }
