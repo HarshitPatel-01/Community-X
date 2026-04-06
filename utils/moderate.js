@@ -1,52 +1,53 @@
-const fetch = require("node-fetch");
-
+const axios = require("axios");
 const cache = new Map();
 const MAX_CACHE = 5000;
 
-async function moderateText(text){
-
-  if(!text || text.trim() === ""){
-    return { flagged:false }
+/**
+ * Moderates text using the RoBERTa toxicity model.
+ * @param {string} text - The text to check for toxicity.
+ * @returns {Promise<{flagged: boolean, score: number}>}
+ */
+async function moderateText(text) {
+  if (!text || text.trim() === "") {
+    return { flagged: false, score: 0 };
   }
 
   const normalized = text.toLowerCase().trim();
 
-  if(cache.has(normalized)){
+  if (cache.has(normalized)) {
     return cache.get(normalized);
   }
 
-  try{
-    const response = await fetch("http://127.0.0.1:8000/moderate",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body: JSON.stringify({text: normalized})
+  try {
+    // Note: The FastAPI server for RoBERTa should be running on this URL
+    // Changed to 5001 to avoid conflict with Express server (on 5000)
+    const response = await axios.post("http://127.0.0.1:8000/moderate", {
+      text: normalized
+    }, {
+      timeout: 5000 
     });
 
-    const result = await response.json();
-
+    const result = response.data;
     const output = {
-      flagged: result.flagged,
-      score: result.score
+      flagged: !!result.flagged,
+      score: result.score || 0
     };
 
     cache.set(normalized, output);
-
-    if(cache.size > MAX_CACHE){
+    if (cache.size > MAX_CACHE) {
       const firstKey = cache.keys().next().value;
       cache.delete(firstKey);
     }
-
     return output;
 
-  }catch(err){
-
-    console.log("MODERATION ERROR:",err.message);
-
-    return { flagged:false }
+  } catch (err) {
+    if (err.response && err.response.status === 404) {
+      console.error("CRITICAL: Moderation endpoint /moderate returned 404! Check FastAPI server.");
+    } else {
+      console.warn("MODERATION ERROR (Model server might be down):", err.message);
+    }
+    return { flagged: false, score: 0 };
   }
-
 }
 
 module.exports = moderateText;

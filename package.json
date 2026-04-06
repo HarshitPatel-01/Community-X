@@ -1,4 +1,10 @@
 {
+  "name": "community-x",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
   "dependencies": {
     "@tensorflow-models/toxicity": "^1.2.2",
     "@tensorflow/tfjs": "^4.22.0",
@@ -15,7 +21,8 @@
     "mongoose": "^9.1.5",
     "multer": "^2.0.2",
     "openai": "^6.25.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "socket.io": "^4.8.3"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"

@@ -1,160 +1,171 @@
-/* Layout */
-
+/* =====================================================
+   NEW COMMUNITY FORM — Clean & Minimal
+===================================================== */
 .future-layout {
-  margin-left: 240px;
-  padding: 80px 60px 120px;
-  background: #0c0f13;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .future-main {
-  max-width: 720px;
+  width: 100%;
+  max-width: 580px;
 }
 
-/* Hero */
-
-.future-create-hero h1 {
-  font-size: 30px;
-  margin: 0;
+.future-create-hero {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-subtle);
 }
-
-.future-create-hero p {
-  margin-top: 8px;
-  font-size: 15px;
-  color: #8b949e;
-}
-
-/* Panel */
+.future-create-hero h1 { font-size: 22px; font-weight: 700; }
+.future-create-hero p { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
 
 .future-create-panel {
-  margin-top: 40px;
-  padding: 40px;
-  background: rgba(255,255,255,0.02);
-  backdrop-filter: blur(14px);
-  border-radius: 24px;
-}
-
-/* Avatar */
-
-.future-avatar-section {
-  display: flex;
-  gap: 28px;
-  align-items: center;
-  margin-bottom: 40px;
-}
-
-.future-avatar-preview {
-  width: 88px;
-  height: 88px;
-  border-radius: 26px;
-  background: linear-gradient(145deg,#1a1f25,#12161a);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  font-weight: 600;
-  color: #d4a017;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 
-.future-avatar-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 26px;
-}
-
-/* Upload */
-
-.future-upload label {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.future-upload small {
-  display: block;
-  margin-top: 6px;
-  font-size: 12px;
-  color: #6e7681;
-}
-
-/* Fields */
-
-.future-field-group {
+.future-create-panel form {
   display: flex;
   flex-direction: column;
-  gap: 26px;
-  margin-bottom: 30px;
+}
+
+/* Avatar section */
+.future-avatar-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.future-avatar-preview {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--bg-soft);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--primary);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.future-avatar-preview img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+.future-upload { flex: 1; }
+.future-upload label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 6px;
+}
+.future-upload input[type="file"] {
+  font-size: 13px;
+  color: var(--text-sub);
+  font-family: inherit;
+}
+.future-upload small { display: block; font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+/* Field groups */
+.future-field-group {
+  display: flex;
+  gap: 0;
+  flex-direction: column;
 }
 
 .future-field {
-  display: flex;
-  flex-direction: column;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .future-field label {
-  font-size: 14px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  display: block;
   margin-bottom: 6px;
-  color: #d1d5db;
 }
 
 .future-field input,
 .future-field textarea {
-  padding: 14px;
-  background: #12161a;
-  border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 14px;
-  color: #fff;
+  width: 100%;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  font-family: inherit;
   font-size: 14px;
-  transition: all 0.2s ease;
+  padding: 9px 12px;
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
 }
-
 .future-field input:focus,
 .future-field textarea:focus {
-  border-color: #d4a017;
-  box-shadow: 0 0 0 2px rgba(212,160,23,0.15);
-  outline: none;
+  border-color: var(--accent);
+  background: var(--bg-card);
 }
+.future-field input::placeholder,
+.future-field textarea::placeholder { color: var(--text-muted); }
+.future-field textarea { min-height: 100px; resize: vertical; line-height: 1.6; }
 
-/* Prefix */
-
+/* URL prefix field */
 .future-prefix {
   display: flex;
   align-items: center;
-  border-radius: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   overflow: hidden;
-  background: #12161a;
-  border: 1px solid rgba(255,255,255,0.05);
+  background: var(--bg-soft);
+  transition: border-color 0.15s;
 }
-
+.future-prefix:focus-within { border-color: var(--accent); }
 .future-prefix span {
-  padding: 14px;
-  background: #161b20;
-  color: #d4a017;
+  padding: 0 12px;
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  font-size: 13px;
   font-weight: 600;
+  border-right: 1px solid var(--border);
+  white-space: nowrap;
+  line-height: 38px;
 }
-
 .future-prefix input {
-  border: none;
-  background: transparent;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  flex: 1;
 }
+.future-prefix input:focus { outline: none; }
 
 /* Action */
-
 .future-action {
-  margin-top: 40px;
+  padding: 16px 20px;
+  background: var(--bg-card);
+  display: flex;
+  justify-content: flex-end;
 }
 
 .future-submit {
-  background: #d4a017;
+  padding: 9px 24px;
+  border-radius: var(--radius-full);
   border: none;
-  padding: 12px 28px;
-  border-radius: 30px;
-  font-weight: 600;
+  background: var(--primary);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
+  font-family: inherit;
+  transition: background 0.15s, transform 0.15s;
 }
-
-.future-submit:hover {
-  transform: translateY(-2px);
-  background: #f1b500;
-}
+.future-submit:hover { background: var(--primary-hover); transform: translateY(-1px); }

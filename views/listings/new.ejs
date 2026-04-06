@@ -1,177 +1,159 @@
 <%- include('../layouts/boilerplate') %>
-<link rel="stylesheet" href="/CSS/newpost.css">
+<link rel="stylesheet" href="/css/newpost.css">
 
-<div class="create-post-page">
-  <div class="create-card">
+<div class="main-content">
+  <div class="new-post-wrapper">
 
-    <!-- HEADER -->
-    <div class="create-top">
-      <div class="avatar">
-        <%= currentUser ? currentUser.charAt(0).toUpperCase() : "U" %>
-      </div>
-
-      <div class="title-area">
-        <h2>Create a post</h2>
-        <span>Share something interesting with the world</span>
-      </div>
+    <!-- Header -->
+    <div class="post-form-header">
+      <h1>Create Post</h1>
+      <p>Share something interesting with your community</p>
     </div>
 
-    <form action="/post/new" method="POST" enctype="multipart/form-data" class="post-form">
+    <!-- Form Card -->
+    <div class="post-form-card">
+      <form action="/post/new" method="POST" enctype="multipart/form-data">
 
-      <!-- ================= COMMUNITY SELECT ================= -->
-      <div class="community-select">
-        <% if (typeof selectedCommunity !== "undefined" && selectedCommunity) { %>
-          <label>
-            <i class="bi bi-people-fill"></i> Posting to c/<%= selectedCommunity.name %>
-          </label>
-          <input type="hidden" name="communityName" value="<%= selectedCommunity.name %>">
-          
-          <div class="visibility-toggle">
-            <label class="switch-container">
-              <input type="checkbox" id="isPublic" name="isPublic" value="true">
-              <span class="slider"></span>
-            </label>
-            <label for="isPublic" class="visibility-label">Make this post public?</label>
+        <!-- Community -->
+        <div class="post-field">
+          <label>Community</label>
+          <% if (typeof selectedCommunity !== "undefined" && selectedCommunity) { %>
+            <input type="text" value="c/<%= selectedCommunity.name %>" readonly style="cursor:default; color: var(--text-muted);">
+            <input type="hidden" name="communityName" value="<%= selectedCommunity.name %>">
+          <% } else { %>
+            <div class="community-select-wrapper">
+              <select name="communityName">
+                <option value="">— No Community (General) —</option>
+                <% if (typeof communities !== "undefined") { %>
+                  <% communities.forEach(c => { %>
+                    <option value="<%= c.name %>">c/<%= c.name %></option>
+                  <% }) %>
+                <% } %>
+              </select>
+            </div>
+          <% } %>
+        </div>
+
+        <!-- Title -->
+        <div class="post-field">
+          <label>Title <span style="color: var(--danger)">*</span></label>
+          <input
+            type="text"
+            name="title"
+            id="titleInput"
+            placeholder="An interesting title..."
+            maxlength="200"
+            required
+          >
+          <small style="font-size: 11px; color: var(--text-muted); margin-top: 4px; display:block;">
+            <span id="charNum">0</span>/200 characters
+          </small>
+        </div>
+
+        <!-- Body Text -->
+        <div class="post-field">
+          <label>Body <span style="color: var(--text-muted); font-weight: 400; font-size: 10px;">(Optional)</span></label>
+          <textarea
+            name="description"
+            id="descriptionInput"
+            placeholder="What's on your mind? (optional)"
+            maxlength="1000"
+          ></textarea>
+        </div>
+
+        <!-- Image Upload -->
+        <div class="post-field">
+          <label>Image <span style="color: var(--text-muted); font-weight: 400; font-size: 10px;">(Optional)</span></label>
+          <div class="file-upload-trigger" id="imageBox" onclick="document.getElementById('imageInput').click()">
+            <i class="bi bi-image"></i>
+            <span id="uploadLabel">Upload an image...</span>
+            <input type="file" id="imageInput" name="image" accept="image/*" hidden>
           </div>
-        <% } else { %>
+          <div id="previewContainer" style="display:none; margin-top: 10px; position:relative;">
+            <img id="previewImage" style="border-radius: var(--radius-sm); max-height: 300px; width: 100%; object-fit: cover;">
+            <button type="button" id="removeImage" style="position:absolute; top:8px; right:8px; background: rgba(0,0,0,0.7); border: none; color: #fff; border-radius: 50%; width:28px; height:28px; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center;">
+              <i class="bi bi-x"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Visibility Toggle (only when community selected) -->
+        <% if (typeof selectedCommunity !== "undefined" && selectedCommunity) { %>
+          <input type="checkbox" id="isPublic" name="isPublic" value="true" hidden>
+          <div class="visibility-card" id="visibilityBtn">
+            <div class="visibility-label">
+              <div class="visibility-icon" id="vIcon"><i class="bi bi-shield-lock-fill"></i></div>
+              <div class="visibility-text">
+                <strong>Post Visibility</strong>
+                <span id="vStatus">Private (Community Only)</span>
+              </div>
+            </div>
+            <div class="visibility-toggle" id="vToggle"></div>
+          </div>
         <% } %>
-      </div>
 
-      <!-- ================= TITLE ================= -->
-      <div class="input-group">
-        <input
-          type="text"
-          name="title"
-          id="titleInput"
-          placeholder="Title"
-          maxlength="200"
-          required
-        >
-        <span class="char-count">
-          <span id="charNum">0</span>/200
-        </span>
-      </div>
-
-      <!-- ================= DESCRIPTION ================= -->
-      <div class="input-group">
-        <textarea
-          name="description"
-          id="descriptionInput"
-          placeholder="Text (optional)"
-          maxlength="1000"
-        ></textarea>
-        <span class="char-count">
-          <span id="descCharNum">0</span>/1000
-        </span>
-      </div>
-
-      <!-- ================= IMAGE UPLOAD (Drag & Drop) ================= -->
-      <div class="image-box" id="imageBox">
-        <div id="uploadPrompt" class="upload-prompt">
-          <i class="bi bi-cloud-upload" style="font-size: 2rem; color: #666;"></i>
-          <p style="margin: 10px 0 5px; color: #ccc;">Drag & Drop or Click to Upload</p>
-          <label class="image-btn">
-            Choose Image
-            <input type="file" name="image" id="imageInput" accept="image/*" hidden>
-          </label>
+        <!-- Actions -->
+        <div class="post-form-actions">
+          <a href="/home" class="btn-cancel">Cancel</a>
+          <button type="submit" class="btn-submit">Post</button>
         </div>
 
-        <div id="previewContainer" style="display:none; position: relative;">
-          <img id="previewImage">
-          <button type="button" id="removeImage" class="remove-image-btn">
-            <i class="bi bi-x-circle-fill"></i>
-          </button>
-        </div>
-      </div>
+      </form>
+    </div>
 
-      <!-- ================= ACTION ================= -->
-      <div class="post-actions">
-        <button type="submit" class="submit-btn">
-          Post
-        </button>
-      </div>
-
-    </form>
   </div>
 </div>
 
 <script>
-  // ================= TITLE CHARACTER COUNTER =================
-  const titleInput = document.getElementById("titleInput");
-  const charCount = document.getElementById("charNum");
-
-  titleInput.addEventListener("input", () => {
-    charCount.textContent = titleInput.value.length;
+  // Title counter
+  const titleInput = document.getElementById('titleInput');
+  titleInput.addEventListener('input', () => {
+    document.getElementById('charNum').textContent = titleInput.value.length;
   });
 
-  // ================= DESCRIPTION CHARACTER COUNTER =================
-  const descInput = document.getElementById("descriptionInput");
-  const descCharCount = document.getElementById("descCharNum");
+  // Image upload
+  const imageInput = document.getElementById('imageInput');
+  const previewContainer = document.getElementById('previewContainer');
+  const previewImage = document.getElementById('previewImage');
+  const uploadLabel = document.getElementById('uploadLabel');
 
-  descInput.addEventListener("input", () => {
-    descCharCount.textContent = descInput.value.length;
-  });
-
-  // ================= IMAGE UPLOAD & PREVIEW =================
-  const imageBox = document.getElementById("imageBox");
-  const imageInput = document.getElementById("imageInput");
-  const uploadPrompt = document.getElementById("uploadPrompt");
-  const previewContainer = document.getElementById("previewContainer");
-  const previewImage = document.getElementById("previewImage");
-  const removeBtn = document.getElementById("removeImage");
-
-  // File selection via input
-  imageInput.addEventListener("change", e => {
+  imageInput.addEventListener('change', e => {
     const file = e.target.files[0];
-    if (file) handleFile(file);
-  });
-
-  // Drag and drop
-  imageBox.addEventListener("dragover", e => {
-    e.preventDefault();
-    imageBox.style.borderColor = "#4f8cff";
-    imageBox.style.background = "#202327";
-  });
-
-  imageBox.addEventListener("dragleave", e => {
-    e.preventDefault();
-    imageBox.style.borderColor = "";
-    imageBox.style.background = "";
-  });
-
-  imageBox.addEventListener("drop", e => {
-    e.preventDefault();
-    imageBox.style.borderColor = "";
-    imageBox.style.background = "";
-
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith("image/")) {
-      // Set the file to the input element
-      const dataTransfer = new DataTransfer();
-      dataTransfer.items.add(file);
-      imageInput.files = dataTransfer.files;
-      handleFile(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = ev => {
+        previewImage.src = ev.target.result;
+        previewContainer.style.display = 'block';
+        uploadLabel.textContent = file.name;
+      };
+      reader.readAsDataURL(file);
     }
   });
 
-  // Remove image
-  removeBtn.addEventListener("click", () => {
-    imageInput.value = "";
-    uploadPrompt.style.display = "block";
-    previewContainer.style.display = "none";
-    imageBox.classList.remove("has-image");
+  document.getElementById('removeImage').addEventListener('click', e => {
+    e.stopPropagation();
+    imageInput.value = '';
+    previewContainer.style.display = 'none';
+    uploadLabel.textContent = 'Upload an image...';
   });
 
-  // Handle file display
-  function handleFile(file) {
-    const reader = new FileReader();
-    reader.onload = ev => {
-      previewImage.src = ev.target.result;
-      uploadPrompt.style.display = "none";
-      previewContainer.style.display = "block";
-      imageBox.classList.add("has-image");
-    };
-    reader.readAsDataURL(file);
+  // Visibility toggle
+  const visBtn = document.getElementById('visibilityBtn');
+  const isPublic = document.getElementById('isPublic');
+  if (visBtn && isPublic) {
+    visBtn.addEventListener('click', () => {
+      isPublic.checked = !isPublic.checked;
+      visBtn.classList.toggle('active', isPublic.checked);
+      const iconEl = document.querySelector('#vIcon i');
+      const vStatus = document.getElementById('vStatus');
+      if (isPublic.checked) {
+        iconEl.className = 'bi bi-globe-americas';
+        vStatus.textContent = 'Public (Everyone can see)';
+      } else {
+        iconEl.className = 'bi bi-shield-lock-fill';
+        vStatus.textContent = 'Private (Community Only)';
+      }
+    });
   }
 </script>
 

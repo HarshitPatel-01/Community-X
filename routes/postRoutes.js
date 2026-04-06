@@ -8,6 +8,7 @@ const Community = require("../models/community");
 
 
 /* ================= HOME & TRENDING ================= */
+router.get("/", (req, res) => res.redirect("/home"));
 router.get("/home", postController.getHome);
 router.get("/trending", postController.getTrending);
 router.get("/popular", postController.getPopular);

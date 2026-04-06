@@ -1,76 +1,50 @@
-/* ================= ERROR PAGE ================= */
-
+/* =====================================================
+   404 / ERROR PAGE
+===================================================== */
 .error-wrapper {
-  margin-left: 240px; /* sidebar width */
-  padding: 120px 40px;
+  min-height: calc(100vh - var(--nav-h));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
+  padding: 2rem;
+  gap: 12px;
 }
 
-/* Floating Icon */
-
-.error-icon {
-  font-size: 60px;
-  margin-bottom: 20px;
-  animation: float 3s ease-in-out infinite;
-}
-
-/* Floating animation */
-
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
-  100% { transform: translateY(0px); }
-}
-
-/* 404 Text */
+.error-icon { font-size: 60px; line-height: 1; }
 
 .error-code {
-  font-size: 72px;
-  margin: 0;
-  font-weight: 700;
-  letter-spacing: 2px;
+  font-size: 80px;
+  font-weight: 800;
+  color: var(--primary);
+  line-height: 1;
+  letter-spacing: -4px;
 }
-
-/* Main Message */
 
 .error-message {
-  margin-top: 16px;
-  font-size: 18px;
-  font-weight: 500;
-  color: #e6e6e6;
-}
-
-/* Sub message */
-
-.error-sub {
-  margin-top: 8px;
-  font-size: 14px;
-  color: #8b949e;
-}
-
-/* Button */
-
-.btn-home {
-  display: inline-block;
-  margin-top: 28px;
-  padding: 10px 22px;
-  border-radius: 20px;
-  font-size: 13px;
+  font-size: 20px;
   font-weight: 600;
-  border: 1px solid #d4a017;
-  color: #d4a017;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.btn-home:hover {
-  background: rgba(212,160,23,0.1);
+  color: var(--text-main);
 }
 
 .error-quote {
-  margin-top: 14px;
-  font-size: 15px;
-  font-style: italic;
-  color: #d4a017;
-  opacity: 0.9;
+  font-size: 14px;
+  color: var(--text-muted);
+  max-width: 360px;
+  line-height: 1.5;
 }
+
+.error-actions { margin-top: 8px; }
+
+.btn-home {
+  display: inline-block;
+  padding: 10px 24px;
+  border-radius: var(--radius-full);
+  background: var(--primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  transition: background 0.15s, transform 0.15s;
+}
+.btn-home:hover { background: var(--primary-hover); transform: translateY(-1px); }

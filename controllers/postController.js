@@ -31,8 +31,7 @@ exports.getHome = async (req, res) => {
 
     res.render("listings/view", {
       posts,
-      topCommunities,
-      currentUser: req.session.userId
+      topCommunities
     });
 
   } catch (err) {
@@ -88,7 +87,7 @@ exports.getTrending = async (req, res) => {
       { $project: { authorDoc: 0, communityDoc: 0 } }
     ]);
 
-    res.render("listings/trending", { posts, currentUser: req.session.userId });
+    res.render("listings/trending", { posts });
 
   } catch (err) {
     console.log("TRENDING ERROR:", err);
@@ -153,8 +152,7 @@ exports.getPopular = async (req, res) => {
 
     res.render("listings/popular", {
       posts: popularPosts,
-      communities: popularCommunities,
-      currentUser: req.session.userId
+      communities: popularCommunities
     });
 
   } catch (err) {
@@ -193,8 +191,7 @@ exports.getExplore = async (req, res) => {
 
     res.render("listings/explore", {
       posts,
-      topCommunities,
-      currentUser: req.session.userId
+      topCommunities
     });
 
   } catch (err) {
@@ -222,8 +219,7 @@ exports.getPost = async (req, res) => {
 
     res.render("listings/post", {
       post: { ...post.toObject(), userVote },
-      comments,
-      currentUser: req.session.userId
+      comments
     });
 
   } catch (err) {
@@ -279,7 +275,12 @@ exports.createPost = async (req, res) => {
 
   if (toxicityResult.flagged) {
     req.flash("error", "⚠️ Your post contains toxic language. Please revise it.");
-    return res.redirect(req.get("referer") || "/home");
+    // Ensure we don't redirect to a non-existent POST-only route (like /r/:name/new)
+    const referer = req.get("referer");
+    if (referer && !referer.includes("/new") && !referer.includes("/post/new")) {
+       return res.redirect(referer);
+    }
+    return res.redirect("/post/new");
   }
 
     const newPost = new Post({

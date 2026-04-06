@@ -1,0 +1,43 @@
+<%- include('../layouts/boilerplate') %>
+<link rel="stylesheet" href="/css/chat.css">
+
+<div class="main-content">
+  <div class="chat-container">
+    <div class="chat-header">
+      <h1>Ghost Chats</h1>
+      <p>Your anonymous conversations</p>
+    </div>
+
+    <div class="chat-list">
+      <% if (conversations.length === 0) { %>
+        <div class="empty-chats">
+          <i class="bi bi-chat-dots"></i>
+          <p>No active chats yet. Start a conversation from a post or comment!</p>
+        </div>
+      <% } %>
+
+      <% conversations.forEach(conv => { %>
+        <% 
+            const otherParticipant = conv.participants.find(p => String(p._id) !== String(userId));
+            const otherAlias = conv.aliases.get(String(otherParticipant._id));
+        %>
+        <a href="/chat/<%= otherParticipant._id %>" class="chat-item">
+          <div class="chat-avatar">
+            <%= otherAlias.charAt(0) %>
+          </div>
+          <div class="chat-info">
+            <div class="chat-name"><%= otherAlias %></div>
+            <div class="chat-last-msg">
+              <%= conv.lastMessage ? conv.lastMessage.content : "No messages yet" %>
+            </div>
+          </div>
+          <div class="chat-meta">
+            <%= conv.updatedAt.toLocaleDateString() %>
+          </div>
+        </a>
+      <% }) %>
+    </div>
+  </div>
+</div>
+
+<%- include('../layouts/footer') %>

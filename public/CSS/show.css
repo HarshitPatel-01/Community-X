@@ -1,83 +1,135 @@
 /* =====================================================
-   POST CARDS
+   POST CARDS & FEED — Reddit-style
 ===================================================== */
 .main-card { width: 100%; max-width: 680px; }
 
+/* Post Card */
 .card-outline {
   background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 18px;
-  transition: 0.2s ease;
-  margin-bottom: 16px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 10px;
+  transition: border-color 0.15s;
   cursor: default;
 }
+.card-outline:hover { border-color: var(--border); }
 
-.card-outline:hover {
-  background: var(--bg-soft);
-  border-color: #3a4050;
+/* Post Click area */
+.post-click { padding: 12px 16px; cursor: pointer; }
+
+/* Meta line */
+.post-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.subreddit {
+  font-weight: 700;
+  color: var(--text-sub);
+  font-size: 13px;
+}
+.subreddit:hover { color: var(--text-main); text-decoration: underline; }
+.dot { color: var(--text-muted); font-size: 11px; }
+.post-meta { color: var(--text-muted); font-size: 12px; }
+
+/* Title */
+.post-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+.post-title-big {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.4;
+  margin-bottom: 10px;
 }
 
-.post-title { font-size: 16px; font-weight: 600; margin: 6px 0; }
-.post-text { color: var(--text-muted); font-size: 14px; line-height: 1.5; margin-top: 4px; }
-.post-header { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
-.subreddit { font-weight: 600; color: var(--accent); }
-.dot { margin: 0 4px; color: var(--text-muted); }
-.post-click { cursor: pointer; }
+/* Body text */
+.post-text {
+  color: var(--text-sub);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-top: 4px;
+}
 
-/* =====================================================
-   MEDIA
-===================================================== */
+/* Media */
+.post-media {
+  margin-top: 10px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
 .post-media img,
 .post-media video {
   width: 100%;
-  border-radius: 8px;
-  margin-top: 10px;
+  display: block;
+  max-height: 520px;
+  object-fit: cover;
 }
 
+/* Post focus (single post page) */
+.post-focus { padding: 20px; }
+
 /* =====================================================
-   ACTION BUTTONS
+   ACTION BAR
 ===================================================== */
 .post-actions {
   display: flex;
-  gap: 12px;
-  border-top: 1px solid var(--border);
-  margin-top: 12px;
-  padding-top: 10px;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 8px 6px;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .action-btn,
+.vote-btn,
 .upvote-btn,
 .downvote-btn {
-  background: transparent;
-  border: 1px solid var(--border);
-  padding: 5px 12px;
-  border-radius: 6px;
-  font-size: 13px;
-  color: var(--text-muted);
   display: flex;
   align-items: center;
   gap: 5px;
-  transition: 0.15s;
+  padding: 5px 10px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
+  transition: background 0.13s, color 0.13s;
   font-family: inherit;
 }
-
 .action-btn:hover,
+.vote-btn:hover,
 .upvote-btn:hover,
 .downvote-btn:hover {
   background: var(--bg-soft);
   color: var(--text-main);
 }
 
-.upvote-btn.active {
-  color: var(--primary);
-  border-color: var(--primary);
-  background: rgba(99,102,241,0.1);
-}
+/* Active vote states */
+.upvote-btn.active   { color: var(--primary); }
+.downvote-btn.active { color: var(--accent); }
 
-.downvote-btn.active {
-  color: var(--accent);
-  border-color: var(--accent);
-  background: rgba(6,182,212,0.1);
+/* Post hover strip */
+.post-hover { transition: border-color 0.15s; }
+.post-hover:hover { border-color: var(--border); }
+
+/* Inline form (delete) */
+.inline-form { display: inline; margin: 0; }
+
+/* Full post */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
 }
+.empty-state h3 { font-size: 18px; margin-bottom: 6px; color: var(--text-sub); }

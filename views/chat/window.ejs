@@ -1,0 +1,79 @@
+<%- include('../layouts/boilerplate') %>
+<link rel="stylesheet" href="/css/chat.css">
+
+<div class="main-content">
+  <div class="chat-window">
+    <div class="chat-win-header">
+      <a href="/chat" class="back-btn"><i class="bi bi-chevron-left"></i></a>
+      <div class="header-info">
+        <span class="header-name"><%= otherAlias %></span>
+        <span class="header-status">Ghost Chat</span>
+      </div>
+      <div class="header-avatar"><%= otherAlias.charAt(0) %></div>
+    </div>
+
+    <div class="messages-area" id="messagesArea">
+      <% messages.forEach(msg => { %>
+        <div class="message-bubble <%= String(msg.sender) === String(userId) ? 'me' : 'them' %>">
+          <div class="msg-content"><%= msg.content %></div>
+          <div class="msg-time"><%= new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %></div>
+        </div>
+      <% }) %>
+    </div>
+
+    <form class="chat-input-area" id="chatForm">
+      <input type="text" id="msgInput" placeholder="Type an anonymous message..." autocomplete="off" required>
+      <button type="submit"><i class="bi bi-send-fill"></i></button>
+    </form>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  const messagesArea = document.getElementById('messagesArea');
+  const chatForm = document.getElementById('chatForm');
+  const msgInput = document.getElementById('msgInput');
+  const conversationId = '<%= conversation._id %>';
+  const myAlias = '<%= myAlias %>';
+
+  // Join room
+  socket.emit('join', conversationId);
+
+  // Scroll to bottom
+  const scrollToBottom = () => {
+    messagesArea.scrollTop = messagesArea.scrollHeight;
+  };
+  scrollToBottom();
+
+  // Send message
+  chatForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const content = msgInput.value.trim();
+    if (content) {
+      socket.emit('chat message', {
+        conversationId: conversationId,
+        content: content,
+        senderAlias: myAlias
+      });
+      msgInput.value = '';
+    }
+  });
+
+  // Receive message
+  socket.on('chat message', (data) => {
+    const isMe = data.senderId === '<%= userId %>';
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `message-bubble ${isMe ? 'me' : 'them'}`;
+    
+    msgDiv.innerHTML = `
+      <div class="msg-content">${data.content}</div>
+      <div class="msg-time">${new Date(data.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+    `;
+    
+    messagesArea.appendChild(msgDiv);
+    scrollToBottom();
+  });
+</script>
+
+<%- include('../layouts/footer') %>

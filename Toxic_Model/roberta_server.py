@@ -15,10 +15,12 @@ class TextInput(BaseModel):
 
 @app.post("/moderate")
 def moderate(data: TextInput):
+    if not data.text.strip():
+        return {"flagged": False, "score": 0, "label": "none"}
 
     result = classifier(data.text)[0]
-
-    flagged = result["score"] > 0.7
+    # Stricter threshold for better moderation
+    flagged = result["score"] > 0.6 
 
     return {
         "label": result["label"],

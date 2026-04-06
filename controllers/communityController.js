@@ -118,9 +118,7 @@ exports.getCommunity = async (req, res) => {
     res.render("community/show", {
       community,
       posts,
-      isMember,
-      userId: req.session.userId,
-      currentUser: req.session.userId
+      isMember
     });
 
   } catch (err) {

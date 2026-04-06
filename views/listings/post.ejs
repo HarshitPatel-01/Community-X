@@ -15,6 +15,11 @@
         <span class="post-meta">
           Posted by
           <strong><%= post.author?.username || "Unknown" %></strong>
+          <% if (userId && post.author && String(post.author._id) !== String(userId)) { %>
+            <a href="/chat/<%= post.author._id %>" class="ghost-chat-link" title="Anonymous Ghost Chat">
+              <i class="bi bi-person-ghost"></i>
+            </a>
+          <% } %>
           <span class="dot">•</span>
           <time datetime="<%= post.createdAt %>" class="timeago">
             <%= new Date(post.createdAt).toLocaleString() %>
@@ -60,7 +65,7 @@
         </button>
 
         <!--  DELETE (OWNER ONLY) -->
-        <% if (currentUser && post.author && String(post.author._id) === String(currentUser)) { %>
+        <% if (userId && post.author && String(post.author._id) === String(userId)) { %>
           <form
             action="/post/<%= post._id %>/delete"
             method="POST"
@@ -130,7 +135,7 @@
                 </time>
 
                 <!-- DELETE COMMENT (OWNER ONLY) -->
-                <% if (currentUser && String(currentUser) === String(comment.author?._id)) { %>
+                <% if (userId && String(userId) === String(comment.author?._id)) { %>
                   <form
                     action="/comment/<%= comment._id %>/delete"
                     method="POST"
@@ -138,6 +143,10 @@
                   >
                     <button class="delete-comment-btn">Delete</button>
                   </form>
+                <% } else if (userId && comment.author) { %>
+                  <a href="/chat/<%= comment.author._id %>" class="ghost-chat-comment" title="Ghost Chat">
+                    <i class="bi bi-person-ghost"></i>
+                  </a>
                 <% } %>
               </div>
 
