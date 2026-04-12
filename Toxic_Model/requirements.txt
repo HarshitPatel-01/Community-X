@@ -1,0 +1,7 @@
+fastapi
+pydantic
+transformers
+--index-url https://download.pytorch.org/whl/cpu
+torch
+uvicorn
+python-multipart
