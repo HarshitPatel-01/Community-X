@@ -18,35 +18,32 @@ async function moderateText(text) {
     return cache.get(normalized);
   }
 
-  // Use OpenAI API key from environment variables
-  const apiKey = process.env.OPENAI_API_KEY;
+  // Use the custom Toxic_Model URL from environment variables
+  const serviceUrl = process.env.MODERATION_SERVICE_URL;
 
-  if (!apiKey) {
-    console.error("CRITICAL: OPENAI_API_KEY is missing from environment variables!");
+  if (!serviceUrl) {
+    console.warn("WARNING: MODERATION_SERVICE_URL is missing. Falling back to no moderation.");
     return { flagged: false, score: 0 };
   }
 
   try {
     const response = await axios.post(
-      "https://api.openai.com/v1/moderations",
-      { input: text },
+      `${serviceUrl.replace(/\/$/, "")}/moderate`,
+      { text: text },
       {
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`,
         },
-        timeout: 5000,
+        timeout: 10000, // Roberta might take a bit longer than OpenAI
       }
     );
 
-    const result = response.data.results[0];
+    const result = response.data;
     
-    // Pick the highest score among all toxic categories
-    const maxScore = Math.max(...Object.values(result.category_scores));
-
     const output = {
-      flagged: result.flagged, // OpenAI's built-in detection
-      score: maxScore,
+      flagged: result.flagged,
+      score: result.score,
+      label: result.label
     };
 
     // Save to cache
@@ -56,12 +53,12 @@ async function moderateText(text) {
       cache.delete(firstKey);
     }
 
-    console.log(`Moderation check: flagged=${output.flagged}, score=${output.score.toFixed(4)}`);
+    console.log(`Moderation check: flagged=${output.flagged}, score=${output.score.toFixed(4)}, label=${output.label}`);
     return output;
 
   } catch (err) {
-    console.error("MODERATION API ERROR:", err.response?.data || err.message);
-    // Fallback: allow the post if the API is down to avoid breaking the app
+    console.error("MODERATION SERVICE ERROR:", err.response?.data || err.message);
+    // Fallback: allow the post if the service is down to avoid breaking the app
     return { flagged: false, score: 0 };
   }
 }
