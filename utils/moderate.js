@@ -18,6 +18,17 @@ async function moderateText(text) {
     return cache.get(normalized);
   }
 
+  // Quick keyword check for common bypasses (e.g., "shitt", "fuckk")
+  // This acts as a safety net if the AI model is unreachable or fails
+  const badWords = ["shit", "shitt", "fuck", "fuckk", "bitch", "bastard", "dick"];
+  const wordsInText = normalized.split(/\W+/);
+  const foundBadWord = wordsInText.find(w => badWords.includes(w));
+
+  if (foundBadWord) {
+    console.log(`Keyword moderation: flagged word "${foundBadWord}" found.`);
+    return { flagged: true, score: 1.0, label: "toxic (keyword)" };
+  }
+
   // Use the custom Toxic_Model URL from environment variables
   const serviceUrl = process.env.MODERATION_SERVICE_URL;
 

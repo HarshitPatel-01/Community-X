@@ -36,20 +36,36 @@ def moderate(data: TextInput):
 
     # Use torch.no_grad() to ensure no extra memory is used for gradients
     with torch.no_grad():
-        result = classifier(data.text)[0]
+        # Get scores for all labels to be more thorough
+        results = classifier(data.text, top_k=None)
     
-    label = result["label"].lower()
-    score = result["score"]
+    toxic_labels = ["toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"]
+    
+    flagged = False
+    max_toxic_score = 0
+    top_label = "none"
 
-    # martin-ha/toxic-comment-model returns 'toxic' or 'non-toxic'
-    is_toxic_label = label in ["toxic", "severe_toxic", "obscene", "threat", "insult", "identity_hate"]
-    
-    # Stricter threshold for better moderation
-    flagged = is_toxic_label and score > 0.6 
+    # Find the highest toxic score across all categories
+    for res in results:
+        label = res["label"].lower()
+        score = res["score"]
+        
+        if label in toxic_labels:
+            if score > max_toxic_score:
+                max_toxic_score = score
+                top_label = label
+            
+            # Lowered threshold to 0.4 for better detection of borderline toxicity
+            if score > 0.4:
+                flagged = True
+        elif label == "non-toxic" and not top_label or top_label == "none":
+            # Keep track of top label even if not toxic
+            if score > max_toxic_score:
+                top_label = "non-toxic"
 
     return {
-        "label": label,
-        "score": score,
+        "label": top_label,
+        "score": max_toxic_score,
         "flagged": bool(flagged)
     }
 
