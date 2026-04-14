@@ -10,6 +10,7 @@
     "@tensorflow/tfjs": "^4.22.0",
     "axios": "^1.13.5",
     "bcrypt": "^6.0.0",
+    "cloudinary": "^1.41.3",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^4.6.0",
     "dotenv": "^17.2.3",
@@ -20,6 +21,7 @@
     "method-override": "^3.0.0",
     "mongoose": "^9.1.5",
     "multer": "^2.0.2",
+    "multer-storage-cloudinary": "^4.0.0",
     "openai": "^6.25.0",
     "path": "^0.12.7",
     "socket.io": "^4.8.3"

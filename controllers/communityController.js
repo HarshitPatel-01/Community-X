@@ -40,7 +40,7 @@ exports.createCommunity = async (req, res) => {
       name,
       title,
       description,
-      image: req.file ? "/uploads/" + req.file.filename : "",
+      image: req.file ? req.file.path : "",
       creator: req.session.userId,
       members: [req.session.userId],
       memberCount: 1

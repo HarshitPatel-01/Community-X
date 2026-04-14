@@ -292,7 +292,7 @@ exports.createPost = async (req, res) => {
       image: req.file
         ? {
             filename: req.file.filename,
-            url: `/uploads/${req.file.filename}`
+            url: req.file.path
           }
         : null,
       upvotes: 0,

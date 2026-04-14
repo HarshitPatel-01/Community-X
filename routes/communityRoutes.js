@@ -1,26 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const multer = require("multer");
-const path = require("path");
-
+const upload = require("../middleware/upload");
 const communityController = require("../controllers/communityController");
 const postController = require("../controllers/postController");
 const { isLoggedIn } = require("../middleware/auth");
-
-/* ================= MULTER CONFIG ================= */
-
-// 1️⃣ Define storage FIRST
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "public/uploads/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
-  }
-});
-
-// 2️⃣ Then define upload
-const upload = multer({ storage });
 
 /* ================= GET ROUTES ================= */
 
